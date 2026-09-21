@@ -238,4 +238,9 @@ function WarcSearchResultsListItem({ record, isHighlighted = false }: WarcRecord
   )
 }
 
-export default memo(WarcSearchResultsListItem)
+export default memo(
+  WarcSearchResultsListItem,
+  (previous, next) =>
+    previous.isHighlighted === next.isHighlighted &&
+    previous.record === next.record,
+)

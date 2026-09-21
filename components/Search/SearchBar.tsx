@@ -151,9 +151,17 @@ export default function SearchBar({
         )}
 
         {/* Enabled even with an empty input — see handleSubmit. */}
-        <Button type="submit" className={styles.searchButton} disabled={isPending}>
-          {isPending ? "🔄 Searching..." : "🔍 Search"}
+        <Button
+          type="submit"
+          className={styles.searchButton}
+          disabled={isPending}
+          aria-busy={isPending}
+        >
+          {isPending ? "Searching..." : "Search"}
         </Button>
+        <span className="sr-only" aria-live="polite" aria-atomic="true">
+          {isPending ? "Search in progress" : ""}
+        </span>
       </div>
     </form>
   )
