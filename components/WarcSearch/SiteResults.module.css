@@ -166,6 +166,14 @@
   margin-top: 8px;
 }
 
+/* Keep large capture histories out of layout, paint, and accessibility work
+   until they approach the viewport. This complements the bounded scroll pane
+   without changing keyboard navigation or requiring a fragile row-height model. */
+.recordsList > * {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 220px;
+}
+
 /*
  * Clears the fixed nav for the no-JS jump.
  *
