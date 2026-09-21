@@ -7,6 +7,7 @@ import { jsonLd, organizationSchema, websiteSchema } from "@/lib/schema"
 import ArchiveTools from "@/components/WebMCP/ArchiveTools"
 import ConnectionStatus from "@/components/Offline/ConnectionStatus"
 import ServiceWorkerRegistration from "@/components/Offline/ServiceWorkerRegistration"
+import PerformanceMonitor from "@/components/Performance/PerformanceMonitor"
 import {
   SITE_LOCALE,
   SITE_NAME,
@@ -140,6 +141,7 @@ export default function RootLayout({
           */}
         <ArchiveTools />
         <ServiceWorkerRegistration />
+        <PerformanceMonitor />
         <ConnectionStatus />
         <Navigation />
         {children}

@@ -127,4 +127,21 @@ function SiteResults({ siteUrl, records, anchorId }: SiteResultsProps) {
   )
 }
 
-export default memo(SiteResults)
+export default memo(SiteResults, (previous, next) => {
+  if (previous.siteUrl !== next.siteUrl || previous.anchorId !== next.anchorId) return false
+  if (previous.records === next.records) return true
+  if (previous.records.length !== next.records.length) return false
+
+  // Keep memoization useful when a parent recreates the array but the server
+  // returned the same lightweight summaries in the same order.
+  return previous.records.every((record, index) => {
+    const nextRecord = next.records[index]
+    return (
+      record === nextRecord ||
+      (record.recordId === nextRecord?.recordId &&
+        record.status === nextRecord.status &&
+        record.dateArchived === nextRecord.dateArchived &&
+        record.lastModified === nextRecord.lastModified)
+    )
+  })
+})

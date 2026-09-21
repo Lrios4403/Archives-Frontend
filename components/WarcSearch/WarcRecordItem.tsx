@@ -1,6 +1,7 @@
 "use client"
 
 import { memo, useEffect, useRef, useState } from "react"
+import Link from "next/link"
 import type { WarcRecord } from "@/lib/db"
 import { copyText, downloadHref, downloadName, viewHref, viewUrlForClipboard } from "./actions"
 import styles from "./WarcRecordItem.module.css"
@@ -20,15 +21,18 @@ function formatBytes(bytes: number): string {
   return value < 10 ? value.toFixed(1) + sizes[i] : Math.round(value) + sizes[i]
 }
 
-// Helper function to format date compactly
+// Reuse one formatter across rows; constructing an Intl formatter per record is
+// surprisingly expensive on large result pages.
+const dateFormatter = new Intl.DateTimeFormat("en-US", {
+  month: "short",
+  day: "numeric",
+  year: "2-digit",
+  hour: "numeric",
+  minute: "2-digit",
+})
+
 function formatDate(dateString: string): string {
-  return new Date(dateString).toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "2-digit",
-    hour: "numeric",
-    minute: "2-digit",
-  })
+  return dateFormatter.format(new Date(dateString))
 }
 
 // Helper function to get record type from WARC ID
@@ -187,14 +191,15 @@ function WarcSearchResultsListItem({ record, isHighlighted = false }: WarcRecord
         </div>
 
         <footer className={styles.recordFooter}>
-          <a
+          <Link
             href={viewHref(record.recordId)}
+            prefetch
             className={styles.actionButton}
             aria-label={`View WARC record ${record.recordId}`}
           >
             <span aria-hidden="true">🔍</span>
             View
-          </a>
+          </Link>
           {/*
             * A real link now, rather than the `href="#"` placeholder it was.
             *
