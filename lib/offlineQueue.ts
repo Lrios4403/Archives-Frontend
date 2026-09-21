@@ -84,7 +84,12 @@ async function removePersisted(id: string) {
 export async function hydrateOfflineQueue() {
   if (hydrated) return
   hydration ??= readPersistedActions().then((actions) => {
-    queue.splice(0, queue.length, ...actions)
+    // An action can be enqueued before IndexedDB hydration finishes. Merge the
+    // persisted snapshot instead of replacing the in-memory action and losing
+    // a user change made during startup.
+    const persistedIds = new Set(actions.map((action) => action.id))
+    const merged = [...actions, ...queue.filter((action) => !persistedIds.has(action.id))]
+    queue.splice(0, queue.length, ...merged)
     hydrated = true
   }).catch(() => { hydrated = true })
   await hydration
