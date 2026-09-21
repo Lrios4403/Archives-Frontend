@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { memo, useEffect, useRef, useState } from "react"
 import type { WarcRecord } from "@/lib/db"
 import { copyText, downloadHref, downloadName, viewHref, viewUrlForClipboard } from "./actions"
 import styles from "./WarcRecordItem.module.css"
@@ -66,7 +66,7 @@ const COPY_LABEL: Record<CopyState, { icon: string; text: string }> = {
   failed: { icon: "⚠️", text: "Failed" },
 }
 
-export default function WarcSearchResultsListItem({ record, isHighlighted = false }: WarcRecordItemProps) {
+function WarcSearchResultsListItem({ record, isHighlighted = false }: WarcRecordItemProps) {
   const { icon, type } = getRecordType(record.warcRecordId)
   const statusColorClass = getStatusColorClass(record.status)
 
@@ -237,3 +237,5 @@ export default function WarcSearchResultsListItem({ record, isHighlighted = fals
     </>
   )
 }
+
+export default memo(WarcSearchResultsListItem)
