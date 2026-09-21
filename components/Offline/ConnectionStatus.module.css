@@ -1,0 +1,9 @@
+.status { position: fixed; z-index: 50; inset: auto 1rem 1rem; display: flex; align-items: center; gap: .55rem; max-width: 34rem; margin-inline: auto; padding: .65rem .8rem; border: 1px solid; border-radius: var(--r-lg); box-shadow: var(--shadow-float); font-size: .78rem; line-height: 1.35; background: var(--window-bg); }
+.offline { color: var(--status-warn); border-color: var(--warn-border); background: var(--warn-bg); }
+.online { color: var(--status-ok); border-color: var(--ok-border); background: var(--ok-bg); }
+.dot { width: .55rem; height: .55rem; flex: 0 0 auto; border-radius: 50%; background: currentColor; }
+@media (min-width: 640px) { .status { inset-inline: auto 1.25rem; } }
+@media (prefers-reduced-motion: no-preference) { .dot { animation: pulse 1.5s ease-in-out infinite; } }
+@keyframes pulse { 50% { opacity: .35; } }
+@media (prefers-reduced-motion: reduce) { .dot { animation: none; } }
+@media (max-width: 420px) { .status { inset-inline: .6rem; } }
