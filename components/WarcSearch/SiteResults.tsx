@@ -1,3 +1,4 @@
+import { memo } from "react"
 import type { WarcRecord } from "@/lib/db"
 import Window from "@/components/Window/Window"
 import WarcRecordItem from "./WarcRecordItem"
@@ -26,7 +27,7 @@ function formatBytes(bytes: number): string {
   return value < 10 ? value.toFixed(1) + sizes[i] : Math.round(value) + sizes[i]
 }
 
-export default function SiteResults({ siteUrl, records, anchorId }: SiteResultsProps) {
+function SiteResults({ siteUrl, records, anchorId }: SiteResultsProps) {
   // One pass, and no spread: `Math.min(...records.map(...))` builds an
   // intermediate array and then passes every element as a separate argument,
   // which throws RangeError once a site has enough captures. A site's record
@@ -125,3 +126,5 @@ export default function SiteResults({ siteUrl, records, anchorId }: SiteResultsP
     </div>
   )
 }
+
+export default memo(SiteResults)

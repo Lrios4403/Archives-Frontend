@@ -1,5 +1,12 @@
 .siteContainer {
   margin-bottom: 0;
+
+  /* Keep each archive window's layout and paint work local while large result
+     pages scroll. The intrinsic size prevents below-the-fold cards from
+     collapsing before content-visibility reveals them. */
+  contain: layout paint style;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 560px;
 }
 
 .siteContent {
