@@ -1,0 +1,79 @@
+.container {
+  min-height: 100vh;
+  /* No background here — let the universal body gradient show through (matches the index). */
+  padding: 120px 1rem 2rem; /* top offset for the fixed navigation (matches the index) */
+}
+
+.mainContent {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-family: var(--font-mono);
+  color: var(--text-primary);
+  margin: 0 0 0.5rem 0;
+  text-shadow: 2px 2px 0px var(--shadow-color);
+}
+
+.subtitle {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.emptyState {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: var(--bg-secondary);
+  border: 2px solid var(--border-color);
+  border-radius: var(--r-lg);
+  margin-top: 2rem;
+}
+
+.emptyStateIcon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  opacity: 0.6;
+}
+
+.emptyStateTitle {
+  font-size: 1.5rem;
+  color: var(--text-primary);
+  margin: 0 0 1rem 0;
+  font-family: var(--font-mono);
+}
+
+.emptyStateMessage {
+  color: var(--text-secondary);
+  line-height: 1.6;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+/* Removed all loading-related styles - moved to WarcSearchResultsLoading.module.css */
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .container {
+    padding: 76px 0.5rem 1rem;
+  }
+
+  .title {
+    font-size: 2rem;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+  }
+
+  .emptyState {
+    padding: 2rem 1rem;
+  }
+}

@@ -1,0 +1,152 @@
+.window {
+  border: 2px solid var(--border-dark);
+  background: var(--window-bg);
+  border-radius: var(--r);
+  box-shadow: var(--shadow-window);
+  overflow: hidden;
+}
+
+.titlebar {
+  background: linear-gradient(135deg, var(--accent-orange) 0%, var(--accent-orange-dark) 100%);
+  color: var(--primary-bg);
+  padding: 12px 16px;
+  gap: 12px;
+  font-weight: 700;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  user-select: none;
+  font-family: var(--font-mono);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.titleText {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/*
+ * The titlebar count. Pushed right with margin-left:auto rather than relying on
+ * the bar's `justify-content: space-between`, which distributes free space
+ * between however many children there are — adding a third child moved the title
+ * off the left edge.
+ *
+ * Not uppercased or tracked like the title beside it: it is a number, and the
+ * titlebar's letter-spacing makes digits read as separate glyphs rather than one
+ * figure.
+ */
+.titleMeta {
+  margin-left: auto;
+  padding-left: 12px;
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: normal;
+  text-transform: none;
+  /*
+   * On the orange titlebar, at 11px. --primary-bg on --accent-orange is 3.27:1 —
+   * fine for this, which is supporting information rather than body text, but
+   * only just, so it is not dimmed any further with opacity.
+   */
+  color: var(--primary-bg);
+}
+
+/*
+ * The `titleContent` slot.
+ *
+ * Takes the row so the chrome inside it can lay itself out, and undoes the
+ * three things the titlebar does to a title: uppercase, 1px tracking and weight
+ * 700. Those are right for the word "VIEWER" and wrong for a url — uppercasing
+ * an address is not a style choice, it is a different address.
+ */
+.titleSlot {
+  flex: 1;
+  min-width: 0;
+  text-transform: none;
+  letter-spacing: normal;
+  font-weight: 400;
+}
+
+/*
+ * A titlebar holding controls rather than a word needs a little less padding —
+ * 12px around a 22px chip makes a 46px bar. Scoped to the slot case so the other
+ * ten Windows on the site keep the height they have.
+ */
+.titlebar:has(.titleSlot) {
+  padding: 7px 12px;
+}
+
+/*
+ * The decorative _ □ × stand down when the slot is carrying real controls.
+ *
+ * The offline viewer's titlebar ends in a working "✕ Close". Putting a second,
+ * non-functional × immediately to the right of it is a trap: the reader clicks
+ * the one on the end, nothing happens, and they learn the wrong thing about
+ * every other window on the site. One × per titlebar, and it works.
+ */
+.titlebar:has(.titleSlot) .windowControls {
+  display: none;
+}
+
+.windowControls {
+  display: flex;
+  gap: 6px;
+}
+
+.controlButton {
+  width: 18px;
+  height: 18px;
+  background: var(--on-accent-fill);
+  border: 1px solid var(--on-accent-line);
+  border-radius: var(--r-sm);
+  font-size: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary-bg);
+  transition: all 0.2s ease;
+  font-family: var(--font-mono);
+}
+
+.controlButton:hover {
+  background: var(--on-accent-fill-hover);
+  transform: scale(1.05);
+}
+
+.controlButton:active {
+  transform: scale(0.95);
+}
+
+.content {
+  padding: 24px;
+}
+
+/* Full-bleed content (e.g. an iframe viewer) — no inner padding. */
+.content.contentFlush {
+  padding: 0;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  .titlebar {
+    padding: 10px 12px;
+    font-size: 11px;
+  }
+
+  .content {
+    padding: 16px;
+  }
+
+  .controlButton {
+    width: 16px;
+    height: 16px;
+    font-size: 9px;
+  }
+
+}

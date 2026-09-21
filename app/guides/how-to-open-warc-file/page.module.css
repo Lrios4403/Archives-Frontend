@@ -1,0 +1,23 @@
+/*
+ * Mirrors app/warcs/offline/page.module.css — the top padding is the fixed
+ * navigation's clearance. Narrower than the tool pages: this is an article, and
+ * the Prose grid inside it already splits into columns where that helps.
+ */
+.container {
+  min-height: 100vh;
+  padding: 120px 1rem 2rem;
+}
+
+.mainContent {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 76px 0.5rem 1rem;
+  }
+}

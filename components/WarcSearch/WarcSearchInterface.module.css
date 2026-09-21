@@ -1,0 +1,105 @@
+/*
+ * The search page's window chrome and its hints panel — and nothing else.
+ *
+ * This file used to be 382 lines. Two thirds of it styled a search form that
+ * this component has not rendered since it started delegating its input row to
+ * Search/SearchBar: .searchForm, .searchInput and its focus/placeholder/disabled
+ * states, .contentTypeSelect, .searchButton, the three clear-button variants and
+ * a singular .hintList that had been superseded by .hintsList. Forty-six dead
+ * rules, including a third full copy of the field recipe and its own light-mode
+ * override block, none of it reachable.
+ */
+
+.searchContainer {
+  margin-bottom: 4rem;
+}
+
+.searchContent {
+  background-color: var(--window-bg);
+  padding: 1rem;
+}
+
+.searchHints {
+  margin-top: 24px;
+  padding: 1rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r);
+  font-family: var(--font-mono);
+  transition: all 0.3s ease;
+}
+
+.hintsTitle {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+}
+
+.hintsList {
+  margin: 0;
+  padding-left: 1.2rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  list-style: none; /* we render our own ▸ marker via ::before */
+}
+
+.hintsList li {
+  position: relative; /* anchor the ▸ ::before to each item (was escaping to the page's left edge) */
+  margin-bottom: 0.3rem;
+}
+
+.hintsList li::before {
+  content: "▸";
+  position: absolute;
+  left: -1.2rem;
+  color: var(--accent-orange);
+}
+
+.hintsList code {
+  background: var(--primary-bg);
+  padding: 2px 6px;
+  border-radius: var(--r-sm);
+  font-size: 10px;
+  color: var(--accent-orange-light);
+  border: 1px solid var(--border-subtle);
+  transition: all 0.2s ease;
+}
+
+.hintsList code:hover {
+  background: var(--accent-orange);
+  color: var(--primary-bg);
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  .searchHints {
+    margin-top: 16px;
+    padding: 12px;
+  }
+}
+
+/* Added styles for current search display and loading states */
+.currentSearch {
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+}
+
+.currentSearchLabel {
+  color: var(--text-secondary);
+  margin-right: 0.5rem;
+}
+
+.currentSearchQuery {
+  color: var(--accent-orange);
+  background: var(--primary-bg);
+  padding: 2px 6px;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--border-subtle);
+}

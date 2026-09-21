@@ -1,0 +1,338 @@
+/* ===========================================================================
+ * Offline viewer — shared classes.
+ *
+ * No colour in this file may be a literal. The offline viewer was the only part
+ * of the site that broke in dark mode, and it broke because it was written in
+ * Tailwind greys — bg-white, border-gray-300, text-gray-500 — which do not know
+ * the theme exists.
+ *
+ * Surfaces and fields come from ../shared/primitives.module.css. What lives
+ * here is the vocabulary the viewer needs and the rest of the site does not:
+ * a 22px inline chip button, a windowed tree row, an address grid.
+ * ======================================================================== */
+
+/* ---- text ---------------------------------------------------------------- */
+
+.truncate {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.meta {
+  font-size: 11px;
+  letter-spacing: 0.3px;
+  color: var(--text-secondary);
+}
+
+.metaDim {
+  font-size: 10px;
+  letter-spacing: 0.3px;
+  color: var(--text-muted);
+}
+
+.mono {
+  font-family: var(--font-mono);
+}
+
+/* A url on its own line: mono, primary, clipped rather than wrapped. */
+.urlLine {
+  composes: truncate;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-primary);
+}
+
+.label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+/* ---- surfaces ------------------------------------------------------------ */
+
+.panelHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border-hairline);
+  background: var(--primary-bg-light);
+}
+
+/*
+ * A floor as well as a ceiling. Two records used to make a 72px window with a
+ * scrollbar in it — technically correct and unpleasant to use.
+ */
+.scrollPane {
+  max-height: 70vh;
+  min-height: 8rem;
+  overflow: auto;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r);
+  background: var(--window-bg);
+}
+
+/*
+ * While a capture panel is open.
+ *
+ * The panel is absolutely positioned so that opening it costs the tree no height
+ * and every row stays exactly TREE_ROW_HEIGHT — which is what makes the windowing
+ * arithmetic work. The cost is that the panel does not enlarge the pane, so it
+ * gets clipped by it: on an archive with four records the pane was ~150px and the
+ * panel, which contains a timeline chart, was several hundred. Raising the floor
+ * while one is open is the fix that does not touch the row geometry.
+ *
+ * In the same file as .scrollPane on purpose — a min-height override in another
+ * module would be at the mercy of which stylesheet the bundler emitted first.
+ */
+.scrollPaneWithPanel {
+  composes: scrollPane;
+  /*
+   * min() rather than a flat 30rem: a min-height beats a max-height when the two
+   * conflict, so on a laptop in landscape the pane would have grown past its own
+   * 70vh ceiling and pushed the page around. Clamped, it grows to 30rem where
+   * there is room and stops at the ceiling where there is not.
+   */
+  min-height: min(30rem, 70vh);
+}
+
+/* ---- buttons ------------------------------------------------------------- */
+
+/*
+ * The small inline action: Download, View, Copy, the ← → pair, Dismiss.
+ *
+ * Deliberately not components/Button. That one is a 40px uppercase CTA on a
+ * filled orange ground; these sit inside table rows and address bars at 22px
+ * and have to disappear into them.
+ */
+.chipButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  padding: 2px 8px;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r);
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.3px;
+  line-height: 1.6;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.chipButton:hover:not(:disabled) {
+  color: var(--accent-orange);
+  border-color: var(--accent-orange);
+  background: var(--accent-tint-weak);
+}
+
+.chipButton:focus-visible {
+  outline: none;
+  border-color: var(--accent-orange);
+  box-shadow: 0 0 0 3px var(--accent-tint);
+}
+
+.chipButton:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Carries no chrome of its own — the [+]/[-] toggles, the timeline link. */
+.bareButton {
+  border: none;
+  background: transparent;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.bareButton:focus-visible {
+  outline: 1px solid currentColor;
+  outline-offset: 2px;
+}
+
+/* ---- fields -------------------------------------------------------------- */
+
+.searchField {
+  composes: fieldCompact from '../shared/primitives.module.css';
+  flex: 1;
+}
+
+.typeSelect {
+  composes: selectCompact from '../shared/primitives.module.css';
+}
+
+.checkboxLabel {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  user-select: none;
+}
+
+.checkbox {
+  width: 14px;
+  height: 14px;
+  accent-color: var(--accent-orange);
+  cursor: pointer;
+}
+
+/* A row of controls above a pane. */
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin-bottom: 8px;
+}
+
+/* ---- status boxes -------------------------------------------------------- */
+
+.errorBox {
+  border: 1px solid var(--error-border);
+  border-radius: var(--r);
+  background: var(--error-bg);
+  color: var(--error-fg);
+  padding: 6px 10px;
+}
+
+.warnText {
+  color: var(--warn-fg);
+}
+
+/* ---- progress ------------------------------------------------------------ */
+
+.progressTrack {
+  height: 4px;
+  width: 100%;
+  overflow: hidden;
+  border-radius: var(--r-sm);
+  background: var(--secondary-bg);
+  box-shadow: var(--shadow-inset);
+}
+
+/*
+ * Width comes from style={{ '--progress': percent }} on the fill. It is the one
+ * value here that genuinely has to be inline — everything else that used to be
+ * an inline style object is a class now.
+ */
+.progressFill {
+  height: 100%;
+  width: calc(var(--progress, 0) * 1%);
+  background: linear-gradient(90deg, var(--accent-orange-dark), var(--accent-orange));
+  transition: width 0.15s ease;
+}
+
+.progressFillDone {
+  composes: progressFill;
+  background: var(--status-ok);
+}
+
+.progressFillFailed {
+  composes: progressFill;
+  background: var(--status-error);
+}
+
+/* No total known yet — a sliver that travels rather than a bar that fills. */
+.progressFillUnknown {
+  height: 100%;
+  width: 33%;
+  background: var(--accent-orange-light);
+  animation: warcSlide 1.2s ease-in-out infinite;
+}
+
+@keyframes warcSlide {
+  from {
+    margin-left: -33%;
+  }
+  to {
+    margin-left: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .progressFillUnknown {
+    animation: none;
+  }
+
+  .progressFill {
+    transition: none;
+  }
+}
+
+/* ---- address line --------------------------------------------------------
+ * Was the ADDRESS_GRID object in iframe.tsx, shared between the address bar and
+ * the history rows so the two stayed aligned. `composes` does that natively, and
+ * unlike the constant this version has a breakpoint: 15.5rem of fixed record-id
+ * column is most of a phone, so it is the first thing to go.
+ * ---------------------------------------------------------------------- */
+
+.addressGrid {
+  display: grid;
+  grid-template-columns: 0.75rem minmax(0, 1fr) 15.5rem max-content;
+  column-gap: 0.75rem;
+  align-items: baseline;
+}
+
+/*
+ * The record-id cell. Declared at the top level rather than only inside the
+ * breakpoint because `composes` can only reach a top-level local class — a rule
+ * that exists solely inside a media query is not one.
+ */
+.addressId {
+  min-width: 0;
+}
+
+@media (max-width: 768px) {
+  .addressGrid {
+    grid-template-columns: 0.75rem minmax(0, 1fr) max-content;
+  }
+
+  .addressId {
+    display: none;
+  }
+}
+
+/* ---- layout helpers ------------------------------------------------------- */
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.stackWide {
+  composes: stack;
+  gap: 16px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.rowBetween {
+  composes: row;
+  justify-content: space-between;
+}
+
+.spacer {
+  flex: 1;
+  min-width: 0;
+}

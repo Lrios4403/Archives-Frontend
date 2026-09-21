@@ -1,0 +1,203 @@
+.resultsContainer {
+  margin-top: 64px;
+}
+
+.resultsHeader {
+  margin-bottom: 64px;
+}
+
+.resultsSummary {
+  padding: 12px 16px;
+}
+
+.summaryStats {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 768px) {
+  .summaryStats {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+}
+
+.summaryItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+}
+
+.summaryLabel {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.summaryValue {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.summaryValue code {
+  background: var(--input-bg);
+  padding: 2px 4px;
+  border-radius: var(--r-sm);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  border: 1px solid var(--border-subtle);
+}
+
+.resultsList {
+  display: flex;
+  flex-direction: column;
+  gap: 64px;
+}
+
+/* No Results Styles */
+.noResults {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.noResultsIcon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  opacity: 0.6;
+}
+
+.noResultsTitle {
+  font-size: 20px;
+  color: var(--text-primary);
+  margin: 0 0 12px 0;
+  font-weight: 600;
+}
+
+.noResultsMessage {
+  color: var(--text-secondary);
+  margin: 0 0 20px 0;
+  line-height: 1.5;
+}
+
+.noResultsSuggestions {
+  background: var(--input-bg);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r);
+  padding: 16px;
+  text-align: left;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.suggestionsTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 8px 0;
+}
+
+.suggestionsList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.suggestionsList li {
+  padding: 4px 0;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.suggestionsList li:before {
+  content: "→ ";
+  color: var(--accent-orange);
+  font-weight: bold;
+  margin-right: 4px;
+}
+
+/*
+ * The jump list: every site on this page, between the summary and the pager.
+ *
+ * A vertical index, one url per line, rather than a wrapping strip of chips.
+ * Chips looked tidy until a real result set hit them: this corpus has urls that
+ * are query strings the length of a paragraph, so a wrapped row went one entry
+ * per line anyway, at three lines each, and the list was taller than the first
+ * result it was meant to help you skip.
+ *
+ * One line per site, ellipsised, with the capture count pinned right — so the
+ * left edge is a scannable column of hosts and the right edge is a column of
+ * numbers, and the whole thing is a fixed height however long the urls are.
+ */
+.jumpList {
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border-hairline);
+
+  /* No cap and no scrollbar: the list shrinks to whatever is on the page. A
+     results page holds sixteen sites at most, which is sixteen short rows — a
+     scroller inside the one element whose job is showing you what is below just
+     hides half of it behind a second scrollbar. */
+}
+
+.jumpLink {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+
+  padding: 3px 8px;
+  border-radius: var(--r-sm);
+
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.7;
+  letter-spacing: 0.3px;
+  color: var(--text-secondary);
+  text-decoration: none;
+
+  transition: background 0.12s ease, color 0.12s ease;
+}
+
+/* A hairline between rows, not around each one: this is a list, not a stack of
+   cards. `:not(:last-child)` so the last row does not draw a line onto the
+   pager below it. */
+.jumpLink:not(:last-child) {
+  border-bottom: 1px solid var(--border-hairline);
+}
+
+.jumpLink:hover {
+  background: var(--accent-tint-weak);
+  color: var(--accent-orange);
+}
+
+.jumpLink:focus-visible {
+  outline: 2px solid var(--accent-orange);
+  outline-offset: -2px;
+}
+
+/*
+ * The url. `min-width: 0` is what actually lets it ellipsise — a flex item's
+ * default min-width is its content, so without this the row grows to fit the
+ * longest url and the count is pushed off the right edge.
+ */
+.jumpUrl {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* How many captures are behind that entry, right-aligned into a column. */
+.jumpCount {
+  flex-shrink: 0;
+  min-width: 2.5em;
+  text-align: right;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}

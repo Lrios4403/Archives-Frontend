@@ -1,0 +1,250 @@
+.container {
+  margin-bottom: 64px;
+}
+
+.listContainer {
+  border: 2px solid var(--border-field);
+  background: var(--input-bg);
+  border-radius: var(--r);
+  max-height: 400px;
+  overflow-y: auto;
+  overflow-x: hidden; /* hover shifts items translateX(4px); don't show an X scrollbar */
+  box-shadow: var(--shadow-soft);
+}
+
+.archiveItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  border-bottom: 1px solid var(--border-soft);
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s ease;
+  font-family: "JetBrains Mono", "Fira Code", "Courier New", monospace;
+}
+
+.archiveItem:last-child {
+  border-bottom: none;
+}
+
+.archiveItem:hover {
+  background: var(--selection);
+  color: var(--selection-text);
+  transform: translateX(4px);
+}
+
+.archiveItem:hover::before {
+  content: "> ";
+  color: var(--selection-text);
+  font-weight: bold;
+}
+
+.archiveInfo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+.archiveIcon {
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.archiveDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.archiveName {
+  font-weight: 700;
+  font-size: 13px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  letter-spacing: 0.5px;
+}
+
+.archiveDate {
+  font-size: 10px;
+  opacity: 0.7;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-style: italic;
+}
+
+.archiveStats {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.archiveSize {
+  font-size: 11px;
+  font-family: "JetBrains Mono", "Fira Code", "Courier New", monospace;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.archiveLink {
+  font-size: 10px;
+  color: var(--accent-orange);
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.archiveLink:hover {
+  color: var(--accent-orange-light);
+  text-decoration: underline;
+}
+
+/* On row hover the whole item goes orange; keep the link readable (black). */
+.archiveItem:hover .archiveLink {
+  color: #000000;
+}
+
+.archiveItem:hover .archiveLink:hover {
+  color: #000000;
+  text-decoration: underline;
+}
+
+.statusBar {
+  padding: 12px 16px;
+  border-top: 1px solid var(--border-soft);
+  background: var(--primary-bg-light);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  flex-wrap: wrap;
+  gap: 12px;
+  border-radius: 0 0 var(--r-sm) var(--r-sm);
+  font-family: "JetBrains Mono", "Fira Code", "Courier New", monospace;
+}
+
+.statusLeft {
+  color: var(--text-secondary);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.statusRight {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* Error styles */
+.errorContainer {
+  padding: 32px 24px;
+  text-align: center;
+  font-family: "JetBrains Mono", "Fira Code", "Courier New", monospace;
+}
+
+.errorIcon {
+  font-size: 32px;
+  margin-bottom: 12px;
+}
+
+.errorMessage {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.errorDetails {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+  font-style: italic;
+}
+
+/* Skeleton loading styles */
+.skeleton {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.skeletonBox {
+  background: var(--primary-bg-light);
+  border-radius: var(--r-sm);
+}
+
+.skeletonText {
+  background: linear-gradient(
+    90deg,
+    var(--primary-bg-light) 25%,
+    var(--primary-bg-lighter) 50%,
+    var(--primary-bg-light) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: var(--r-sm);
+  color: transparent;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  .archiveItem {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px;
+  }
+
+  .archiveInfo {
+    width: 100%;
+  }
+
+  .archiveStats {
+    width: 100%;
+    text-align: left;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .statusBar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .statusRight {
+    gap: 12px;
+    font-size: 10px;
+  }
+
+  .errorContainer {
+    padding: 24px 16px;
+  }
+}
+
+/* The light-mode overrides that used to live here are gone: --border-field and
+   --border-soft resolve per theme. The container's drop shadow is now
+   --shadow-soft in both themes rather than 0.1 dark / 0.08 light — a 0.02 alpha
+   difference that was not visible on either ground. */

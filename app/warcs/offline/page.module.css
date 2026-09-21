@@ -1,0 +1,68 @@
+/*
+ * Mirrors app/warcs/view/page.module.css — the online viewer is this page's
+ * direct counterpart and the two should not clear the fixed navigation in two
+ * different ways.
+ *
+ * The top padding IS that clearance. It used to be `pt-40` plus six literal
+ * <br /> tags, which is a layout concern spelled as six empty paragraphs of
+ * content.
+ */
+.container {
+  min-height: 100vh;
+  padding: 120px 1rem 2rem;
+}
+
+.mainContent {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/*
+ * The #viewer / #about switch. Pure CSS, on :target.
+ *
+ * "More Information" in the frame is <a href="#about">; "Go Back" in the about
+ * pane is <a href="#viewer">. Following either changes the fragment, which
+ * changes which element is :target, which is all these rules read. No state,
+ * no script, survives a reload with the fragment in the URL, and the browser's
+ * own back button undoes it.
+ *
+ * `:has()` rather than a sibling combinator so the viewer can come FIRST in the
+ * document — it is the page's content and the about text is the footnote — and
+ * still be hidden when the about pane, which follows it, is the target.
+ * Without :has() (a browser several years old) the about pane still opens; the
+ * viewer just stays visible above it. Degrades to "both", never to "neither".
+ */
+.viewer,
+.about {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  /* The nav is fixed. A fragment jump has to land below it, not under it. */
+  scroll-margin-top: 120px;
+}
+
+.about {
+  display: none;
+}
+
+.about:target {
+  display: flex;
+}
+
+.mainContent:has(.about:target) .viewer {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 76px 0.5rem 1rem;
+  }
+
+  .viewer,
+  .about {
+    scroll-margin-top: 76px;
+  }
+}

@@ -1,0 +1,22 @@
+/*
+ * Mirrors app/warcs/offline/page.module.css — see the note there. The top
+ * padding is the fixed navigation's clearance.
+ */
+.container {
+  min-height: 100vh;
+  padding: 120px 1rem 2rem;
+}
+
+.mainContent {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 76px 0.5rem 1rem;
+  }
+}

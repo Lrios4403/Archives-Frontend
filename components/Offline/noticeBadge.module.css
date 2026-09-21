@@ -1,0 +1,127 @@
+/*
+ * Positioned by the frame's bottom column (iframe.tsx `.bottomStack`), not by
+ * itself. It used to be absolute at bottom:12px with its own z-index, which put
+ * it on top of the redirect bar's Dismiss button whenever both were showing;
+ * as a flex item it sits ABOVE the bars, right-aligned, and the panel still
+ * opens upward because the column is anchored at the bottom.
+ */
+.dock {
+  align-self: flex-end;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  /* The column itself lets clicks through; the dock takes them. */
+  pointer-events: auto;
+}
+
+/* Width capped against the CONTAINER, not the viewport, so the panel cannot
+   hang off the side of the frame it belongs to. */
+.panel {
+  composes: panel from '../shared/primitives.module.css';
+  max-height: 20rem;
+  width: min(48rem, calc(100vw - 3rem));
+  overflow: auto;
+}
+
+.head {
+  composes: panelHeader from './Offline.module.css';
+}
+
+.headText {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.table {
+  width: 100%;
+  text-align: left;
+  border-collapse: collapse;
+  font-size: 11px;
+}
+
+.table thead {
+  position: sticky;
+  top: 0;
+  background: var(--primary-bg-lighter);
+  color: var(--text-muted);
+}
+
+.table th {
+  padding: 5px 12px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  font-size: 10px;
+}
+
+.table tbody tr {
+  border-top: 1px solid var(--border-hairline);
+}
+
+.table td {
+  padding: 5px 12px;
+  vertical-align: top;
+}
+
+.cellUrl {
+  font-family: var(--font-mono);
+  color: var(--text-primary);
+}
+
+.cellWhy {
+  color: var(--text-secondary);
+}
+
+.cellRef {
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+}
+
+.cellAt {
+  white-space: nowrap;
+  color: var(--text-muted);
+}
+
+/*
+ * Stronger than a plain chip. This sits over an archived page — which may be
+ * any colour at all, and frequently is — so a pale badge on a pale border
+ * disappeared into whatever was behind it. The second shadow layer is a light
+ * halo that gives it an edge against a dark background as well as a light one.
+ */
+.badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border: 1px solid var(--warn-border);
+  border-radius: var(--r-pill);
+  background: var(--warn-bg);
+  color: var(--warn-fg);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  box-shadow: var(--shadow-card-hover), 0 0 0 1px rgba(255, 255, 255, 0.7);
+  transition: all 0.2s ease;
+}
+
+.badge:hover {
+  border-color: var(--status-warn);
+  filter: brightness(1.05);
+}
+
+.badge:focus-visible {
+  outline: 2px solid var(--accent-orange);
+  outline-offset: 2px;
+}
+
+.dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: var(--r-pill);
+  background: var(--status-warn);
+}

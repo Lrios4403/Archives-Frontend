@@ -1,0 +1,9 @@
+/*
+ * The whole recipe — border, radius, inset shadow, focus ring, placeholder, the
+ * light-mode border and the mobile size bump — lives in the shared primitive.
+ * This file used to restate all of it, including two separate light-mode
+ * override blocks hardcoding the light-mode grey.
+ */
+.input {
+  composes: field from '../shared/primitives.module.css';
+}

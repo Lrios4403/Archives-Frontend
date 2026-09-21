@@ -1,0 +1,67 @@
+.desktopIcons {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.desktopIcon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  padding: 16px;
+  border-radius: var(--r);
+  user-select: none;
+  transition: all 0.2s ease;
+  background: var(--accent-tint-weak);
+  border: 2px solid transparent;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+}
+
+.desktopIcon:hover {
+  background: var(--accent-tint-strong);
+  border-color: var(--accent-orange);
+  transform: translateY(-2px);
+}
+
+.iconImage {
+  font-size: 28px;
+  margin-bottom: 8px;
+}
+
+.iconLabel {
+  font-size: 10px;
+  color: var(--text-primary);
+  text-align: center;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+/* Hide on desktop since we only show in content on mobile */
+@media (min-width: 769px) {
+  .desktopIcons {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .desktopIcons {
+    gap: 16px;
+  }
+  
+  .desktopIcon {
+    padding: 12px;
+    min-width: 80px;
+  }
+  
+  .iconImage {
+    font-size: 24px;
+  }
+  
+  .iconLabel {
+    font-size: 9px;
+  }
+}

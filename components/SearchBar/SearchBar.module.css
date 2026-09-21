@@ -1,0 +1,95 @@
+/*
+ * The home page's search block: Window chrome + quick-search links around the
+ * shared Search/SearchBar.
+ *
+ * This file used to carry its own full copy of the field recipe (.searchInput,
+ * :focus, ::placeholder, two light-mode override blocks, a mobile size bump) —
+ * about a third of the file — even though the component delegates its input to
+ * SharedSearchBar and never rendered any of it. Same for .searchForm,
+ * .searchInputContainer and .quickSearchForm. All dead, all removed.
+ */
+
+.searchContainer {
+  margin-bottom: 64px;
+}
+
+.searchContent {
+  background-color: var(--window-bg);
+}
+
+.quickSearches {
+  padding-top: 16px;
+  border-top: 1px solid var(--border-darker);
+  font-family: var(--font-mono);
+}
+
+.quickSearchTitle {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent-orange);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.quickSearchButtons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.quickSearchButton {
+  display: inline-block;
+  text-decoration: none;
+  background: var(--input-bg);
+  border: 1px solid var(--border-darker);
+  border-radius: var(--r);
+  padding: 6px 12px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--text-secondary);
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.quickSearchButton:hover {
+  background: var(--accent-orange);
+  color: var(--primary-bg);
+  border-color: var(--accent-orange);
+  transform: translateY(-1px);
+}
+
+.quickSearchButton:active {
+  transform: translateY(0);
+}
+
+.quickSearchButton:focus-visible {
+  outline: 2px solid var(--accent-orange);
+  outline-offset: 2px;
+}
+
+@media (max-width: 768px) {
+  .quickSearchButtons {
+    justify-content: center;
+  }
+
+  .quickSearchButton {
+    flex: 1;
+    min-width: 80px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .quickSearchButton:hover {
+    transform: none;
+  }
+}
+
+@media (scripting: none) {
+  .quickSearchButton:hover {
+    transform: translateY(0);
+  }
+}

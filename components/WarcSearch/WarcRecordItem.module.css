@@ -1,0 +1,305 @@
+/*
+ * The shared card surface, not a fourth restatement of it.
+ *
+ * This rule was the only exact duplicate of primitives' `.card` left in the app
+ * — same ground, same hairline, same radius, same shadow — so it is the one
+ * place composing actually removes a copy rather than inventing an abstraction.
+ *
+ * `transition: all 0.15s ease` went with it. The composed transition names
+ * border-color and box-shadow, which are exactly the two properties
+ * `.recordCard:hover` changes, so nothing about the animation moves; `all` was
+ * the broader, slower way of saying the same thing.
+ *
+ * Cross-file `composes` here only ADDS properties, per the ordering note in
+ * primitives.module.css. The two rules that do override the base — `:hover` and
+ * `.highlighted` — are both class+class or class+pseudo, so they outrank a bare
+ * `.card` on specificity and do not depend on source order at all.
+ */
+.recordCard {
+  composes: card from '../shared/primitives.module.css';
+  margin-bottom: 8px;
+  scroll-margin-top: 80px;
+  font-size: 13px;
+}
+
+.recordCard:hover {
+  border-color: var(--accent-orange);
+  box-shadow: var(--shadow-card-hover);
+}
+
+.recordCard.highlighted {
+  border-color: var(--accent-orange);
+  background: var(--primary-bg-lighter);
+  animation: highlightPulse 1.5s ease-in-out;
+}
+
+@keyframes highlightPulse {
+  0% {
+    background: var(--accent-orange-light);
+  }
+  50% {
+    background: var(--primary-bg-lighter);
+  }
+  100% {
+    background: var(--window-bg);
+  }
+}
+
+.recordHeader {
+  background: var(--primary-bg-light);
+  border-bottom: 1px solid var(--border-hairline);
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.recordTitle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+}
+
+.recordIcon {
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.recordInfo {
+  min-width: 0;
+  flex: 1;
+}
+
+.recordId {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-primary);
+  word-break: break-all;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.recordType {
+  font-size: 10px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  margin: 0;
+  line-height: 1;
+}
+
+.statusBadge {
+  padding: 2px 6px;
+  border-radius: var(--r-lg);
+  font-size: 10px;
+  font-weight: 600;
+  color: white;
+  flex-shrink: 0;
+  min-width: 30px;
+  text-align: center;
+}
+
+/* These four were the site's only definition of "what does a 2xx look like",
+   which meant nothing outside this file could match them. They are tokens now,
+   so the offline viewer's timeline can use the same colours. */
+.statusSuccess {
+  background: var(--status-ok);
+}
+
+.statusRedirect {
+  background: var(--status-warn);
+  color: #000;
+}
+
+.statusClientError {
+  background: var(--status-error);
+}
+
+.statusServerError {
+  background: var(--status-special);
+}
+
+.statusUnknown {
+  background: var(--text-muted);
+}
+
+.recordBody {
+  padding: 10px 12px;
+}
+
+.recordGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+@media (max-width: 768px) {
+  .recordGrid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+}
+
+.recordSection {
+  background: var(--input-bg);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-sm);
+  padding: 8px;
+}
+
+.sectionTitle {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 6px 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.metaList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.metaItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 2px 0;
+  gap: 8px;
+}
+
+.metaItem:not(:last-child) {
+  border-bottom: 1px solid var(--border-hairline);
+  margin-bottom: 2px;
+  padding-bottom: 4px;
+}
+
+.metaLabel {
+  font-size: 10px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  flex-shrink: 0;
+  min-width: 40px;
+}
+
+.metaValue {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-primary);
+  word-break: break-all;
+  text-align: right;
+  line-height: 1.2;
+}
+
+.timelineList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.timelineItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 2px 0;
+  gap: 8px;
+}
+
+.timelineItem:not(:last-child) {
+  border-bottom: 1px solid var(--border-hairline);
+  margin-bottom: 2px;
+  padding-bottom: 4px;
+}
+
+.timelineLabel {
+  font-size: 10px;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  flex-shrink: 0;
+}
+
+.timelineValue {
+  font-size: 10px;
+  color: var(--text-primary);
+  text-align: right;
+  line-height: 1.2;
+}
+
+.recordFooter {
+  padding: 6px 12px;
+  border-top: 1px solid var(--border-hairline);
+  background: var(--secondary-bg);
+  display: flex;
+  gap: 4px;
+}
+
+.actionButton {
+  padding: 4px 8px;
+  background: var(--button-bg);
+  border: 1px solid var(--border-light);
+  border-radius: var(--r-sm);
+  color: var(--text-primary);
+  text-decoration: none;
+  /* Copy is a <button> and the others are <a>. A button does not inherit the
+     document font, so without this one of the three renders in the UA's default
+     face at the same size as its neighbours and looks subtly wrong. */
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  white-space: nowrap;
+}
+
+.actionButton:hover {
+  background: var(--button-hover);
+  border-color: var(--accent-orange);
+}
+
+.actionButton:active {
+  background: var(--button-active);
+}
+
+.actionButton:focus {
+  outline: 1px solid var(--accent-orange);
+  outline-offset: 1px;
+}
+
+/* Print styles */
+@media print {
+  .recordCard {
+    break-inside: avoid;
+    box-shadow: none;
+    border: 1px solid #000;
+  }
+
+  .actionButton {
+    display: none;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .recordCard {
+    transition: none;
+  }
+
+  .highlightPulse {
+    animation: none;
+  }
+}

@@ -1,0 +1,275 @@
+/*
+ * Downloads, pinned to the bottom-right of the window.
+ *
+ * The four states used to be a TONES table of Tailwind class strings — three
+ * per state, for the card edge, the dot and the title — because Tailwind's
+ * scanner cannot see a class assembled at runtime. Here `s[session.stage]` is
+ * an ordinary property read, so the state is one class on the card root and the
+ * dot and title follow from it.
+ */
+
+.dock {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.clearAll {
+  composes: chipButton from './Offline.module.css';
+  background: var(--bg-secondary);
+  box-shadow: var(--shadow-card);
+}
+
+.card {
+  width: 22rem;
+  max-width: calc(100vw - 2rem);
+  padding: 12px;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r);
+  background: var(--bg-secondary);
+  box-shadow: var(--shadow-float), 0 0 0 1px rgba(0, 0, 0, 0.05);
+}
+
+.body {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.main {
+  min-width: 0;
+  flex: 1;
+}
+
+.head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.title {
+  composes: truncate from './Offline.module.css';
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+.dot {
+  margin-top: 4px;
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  flex-shrink: 0;
+  border-radius: var(--r-pill);
+}
+
+.bar {
+  margin-top: 6px;
+}
+
+/* The url in flight. Changes many times a second, so it is the LAST line and
+   deliberately quiet — a reader watching the numbers should not have the layout
+   moving under them. */
+.inFlight {
+  composes: metaDim from './Offline.module.css';
+  composes: truncate from './Offline.module.css';
+  composes: mono from './Offline.module.css';
+  margin-top: 4px;
+}
+
+/* ---- state --------------------------------------------------------------- */
+
+.running .dot {
+  background: var(--accent-orange);
+  animation: warcPulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.running .title {
+  color: var(--accent-orange-dark);
+}
+
+.running {
+  border-color: var(--accent-tint-border);
+}
+
+.done .dot {
+  background: var(--status-ok);
+}
+
+.done .title {
+  color: var(--ok-fg);
+}
+
+.done {
+  border-color: var(--ok-border);
+}
+
+.failed .dot {
+  background: var(--status-error);
+}
+
+.failed .title {
+  color: var(--error-fg);
+}
+
+.failed {
+  border-color: var(--error-border);
+}
+
+.cancelled .dot {
+  background: var(--text-muted);
+}
+
+.cancelled .title {
+  color: var(--text-secondary);
+}
+
+.cancelled {
+  border-color: var(--border-subtle);
+}
+
+@keyframes warcPulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .running .dot {
+    animation: none;
+  }
+}
+
+/* ---- failure ------------------------------------------------------------- */
+
+.failureBox {
+  composes: errorBox from './Offline.module.css';
+  margin-top: 6px;
+  padding: 5px 8px;
+}
+
+.failureLabel {
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.failureMessage {
+  margin-top: 2px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  word-break: break-word;
+}
+
+.failureUrl {
+  composes: truncate from './Offline.module.css';
+  margin-top: 2px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  opacity: 0.85;
+}
+
+/* ---- save fallback ------------------------------------------------------- */
+
+.saveButton {
+  composes: chipButton from './Offline.module.css';
+  margin-top: 6px;
+  border-color: var(--ok-border);
+  background: var(--ok-bg);
+  color: var(--ok-fg);
+}
+
+.saveButton:hover:not(:disabled) {
+  border-color: var(--status-ok);
+  background: var(--ok-bg);
+  color: var(--ok-fg);
+  filter: brightness(1.05);
+}
+
+/* ---- notices ------------------------------------------------------------- */
+
+.notices {
+  margin-top: 6px;
+}
+
+.noticesToggle {
+  composes: bareButton from './Offline.module.css';
+  font-size: 11px;
+  color: var(--warn-fg);
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 2px;
+}
+
+.noticesToggle:hover {
+  filter: brightness(1.15);
+}
+
+.noticesList {
+  margin-top: 4px;
+  max-height: 10rem;
+  overflow: auto;
+  list-style: none;
+  padding: 6px;
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--r);
+  background: var(--primary-bg-lighter);
+}
+
+.noticeItem {
+  font-size: 10px;
+}
+
+.noticeItem + .noticeItem {
+  margin-top: 2px;
+}
+
+.noticeReason {
+  color: var(--text-secondary);
+}
+
+.noticeUrl {
+  margin-left: 4px;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+}
+
+/* ---- corner controls ----------------------------------------------------- */
+
+.controls {
+  display: flex;
+  flex-shrink: 0;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.dismiss {
+  composes: bareButton from './Offline.module.css';
+  padding: 0 4px;
+  border-radius: var(--r-sm);
+  font-size: 12px;
+  line-height: 1;
+  color: var(--text-muted);
+  transition: all 0.15s ease;
+}
+
+.dismiss:hover {
+  background: var(--accent-tint-weak);
+  color: var(--text-primary);
+}
+
+.cancel {
+  composes: chipButton from './Offline.module.css';
+  padding: 1px 6px;
+  font-size: 10px;
+}

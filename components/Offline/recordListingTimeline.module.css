@@ -1,0 +1,193 @@
+/* ---- the capture row ----------------------------------------------------- */
+
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px 12px;
+}
+
+/* `li + li` rather than a border on all of them plus :first-child { border: 0 }. */
+.row + .row {
+  border-top: 1px solid var(--border-hairline);
+}
+
+/*
+ * The capture on screen, when this list is showing beside a viewer.
+ * A left rule rather than a background: the rows already use colour for status,
+ * and a second colour would compete with it.
+ */
+.rowActive {
+  border-left: 2px solid var(--accent-orange);
+  background: var(--accent-tint-weak);
+}
+
+.rowHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ---- status chip ---------------------------------------------------------
+ * Was a statusClass() returning Tailwind pairs. The bands are the same; the
+ * colours now come from the same tokens WarcRecordItem uses on the search page,
+ * so a 404 is one colour across the whole site rather than two that resemble
+ * each other.
+ * ---------------------------------------------------------------------- */
+
+.status {
+  padding: 1px 6px;
+  border-radius: var(--r-sm);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.statusNone {
+  background: var(--secondary-bg);
+  color: var(--text-secondary);
+}
+
+.statusOk {
+  background: var(--ok-bg);
+  color: var(--ok-fg);
+}
+
+.statusRedirect {
+  background: var(--warn-bg);
+  color: var(--warn-fg);
+}
+
+.statusClient {
+  background: var(--error-bg);
+  color: var(--error-fg);
+}
+
+.statusServer {
+  background: var(--error-bg);
+  color: var(--error-fg);
+  box-shadow: inset 0 0 0 1px var(--status-special);
+}
+
+.time {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.contentType {
+  composes: truncate from './Offline.module.css';
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/*
+ * Worth its own badge: a truncated body means the stored bytes are short of the
+ * response and its digest will not verify, so "size" below is not the real size.
+ */
+.truncatedBadge {
+  padding: 1px 6px;
+  border-radius: var(--r-sm);
+  background: var(--error-bg);
+  color: var(--error-fg);
+  font-size: 11px;
+}
+
+/* ---- the detail grid ------------------------------------------------------ */
+
+.facts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 16px;
+  row-gap: 2px;
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+@media (min-width: 640px) {
+  .facts {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.fact {
+  display: flex;
+  gap: 4px;
+}
+
+.factWide {
+  composes: fact;
+  grid-column: span 2;
+  overflow: hidden;
+}
+
+.facts dt {
+  color: var(--text-muted);
+}
+
+.chunked {
+  margin-left: 4px;
+  color: var(--text-muted);
+}
+
+/* The WARC-Record-ID in full, on its own line — a uuid is 36 characters and
+   does not fit in a quarter of the row. */
+.idRow {
+  display: flex;
+  gap: 4px;
+  overflow: hidden;
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.idRow dt {
+  flex-shrink: 0;
+  color: var(--text-muted);
+}
+
+.idValue {
+  composes: truncate from './Offline.module.css';
+  user-select: all;
+  font-family: var(--font-mono);
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+/* ---- the list and its panel ----------------------------------------------- */
+
+.chart {
+  padding: 8px 12px;
+}
+
+.list {
+  max-height: 20rem;
+  overflow-y: auto;
+  list-style: none;
+  border-top: 1px solid var(--border-hairline);
+}
+
+.empty {
+  padding: 8px 12px;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* The tree's floating version, anchored under the row it belongs to. */
+.overlay {
+  composes: panel from '../shared/primitives.module.css';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  z-index: 20;
+  margin-top: 4px;
+}
+
+.overlayHead {
+  composes: panelHeader from './Offline.module.css';
+  align-items: flex-start;
+}

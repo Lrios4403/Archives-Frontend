@@ -1,0 +1,156 @@
+/*
+ * Notices over the frame.
+ *
+ * These reused the offline viewer's `.fatal` classes at first, and that was
+ * wrong in three ways at once. `.fatal` is a 24px-padded error CARD built to be
+ * the only thing on screen when a page fails; its children space themselves with
+ * `margin-top`, which does nothing to inline spans, so the text ran together as
+ * "Redirectedfromhttps://…Dismiss"; and it sits in the flow, so every notice
+ * pushed the frame down by most of a centimetre.
+ *
+ * A notice here is a status line about a page that loaded fine. It should cost
+ * the document no height and read as one line.
+ */
+
+/*
+ * The stack, pinned to the bottom of the frame.
+ *
+ * Absolute, so opening or closing a notice never moves the iframe — the reader
+ * is looking at a page, and shifting it under them to tell them something about
+ * it is worse than the thing being told. Bottom rather than top because the top
+ * of the frame is where a document's own header is, and that is the part worth
+ * not covering.
+ */
+.notices {
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: 8px;
+  z-index: 2;
+
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  /* The stack is a layout box, not a surface: clicks pass through the gaps to
+     the page underneath, and only the rows themselves take the pointer. */
+  pointer-events: none;
+}
+
+.notice {
+  pointer-events: auto;
+
+  display: flex;
+  align-items: center;
+  /* The spacing the old markup expected from margins it could not apply. */
+  gap: 8px;
+  min-width: 0;
+
+  /* 4px, not 24px. One line of 11px mono in a 1.6 line-height is 18px, so this
+     is a 28px bar — about a fifth of what it replaced. */
+  padding: 4px 8px;
+
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r);
+  background: var(--window-bg);
+  box-shadow: var(--shadow-card);
+
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+/** The leading word — "Redirected", "301 redirect", "Not archived". */
+.label {
+  flex-shrink: 0;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  color: var(--text-primary);
+}
+
+/** Connective tissue: "from", "→". Never the thing being read. */
+.muted {
+  flex-shrink: 0;
+  color: var(--text-muted);
+}
+
+/*
+ * The address.
+ *
+ * Truncated with an ellipsis rather than wrapped. `.fatalUrl` used
+ * `word-break: break-word`, which turns one of this archive's forum urls into
+ * three lines of hyphenated text and defeats the whole point of a one-line bar.
+ * The full value is on the `title` attribute.
+ */
+.url {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text-secondary);
+}
+
+.action {
+  flex-shrink: 0;
+
+  padding: 1px 8px;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r);
+  background: transparent;
+
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.6;
+  letter-spacing: 0.3px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.action:hover {
+  border-color: var(--accent-orange);
+  color: var(--accent-orange);
+}
+
+.action:focus-visible {
+  outline: 2px solid var(--accent-orange);
+  outline-offset: 1px;
+}
+
+/*
+ * Something is missing, rather than merely different.
+ *
+ * A redirect that was followed is ordinary and gets the neutral surface; a page
+ * the archive does not hold is not, and reads in the error palette.
+ */
+.noticeMissing {
+  border-color: var(--error-border);
+  background: var(--error-bg);
+  color: var(--error-fg);
+}
+
+.noticeMissing .label {
+  color: var(--error-fg);
+}
+
+.noticeMissing .url {
+  color: var(--error-fg);
+}
+
+.noticeMissing .action {
+  border-color: var(--error-border);
+  color: var(--error-fg);
+}
+
+@media (max-width: 768px) {
+  /*
+   * The label and the action are the parts that still say something at this
+   * width; a truncated url on a phone is a few characters and an ellipsis, and
+   * it is on the title attribute either way.
+   */
+  .url {
+    display: none;
+  }
+}

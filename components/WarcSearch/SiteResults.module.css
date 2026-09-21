@@ -1,0 +1,183 @@
+.siteContainer {
+  margin-bottom: 0;
+}
+
+.siteContent {
+  padding: 0;
+}
+
+.siteHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border-hairline);
+  background: var(--primary-bg-light);
+  gap: 12px;
+}
+
+@media (max-width: 768px) {
+  .siteHeader {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+}
+
+.siteInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.siteTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 2px 0;
+  word-break: break-all;
+  line-height: 1.2;
+}
+
+.siteStats {
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin: 0;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.statItem {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.siteActions {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .siteActions {
+    justify-content: stretch;
+  }
+
+  .actionButton {
+    flex: 1;
+  }
+}
+
+.actionButton {
+  padding: 5px 8px;
+  background: var(--button-bg);
+  border: 1px solid var(--border-light);
+  border-radius: var(--r-sm);
+  color: var(--text-primary);
+  /* Download is an <a> now and Timeline is still a <button>: one needs the
+     underline removed, the other needs the font it would not otherwise inherit. */
+  text-decoration: none;
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  white-space: nowrap;
+}
+
+.actionButton:hover {
+  background: var(--button-hover);
+  border-color: var(--accent-orange);
+}
+
+.actionButton:active {
+  background: var(--button-active);
+}
+
+.actionButton:focus {
+  outline: 1px solid var(--accent-orange);
+  outline-offset: 1px;
+}
+
+.timelineSection {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border-hairline);
+  background: var(--secondary-bg);
+}
+
+/*
+ * The capture list scrolls rather than growing without limit.
+ *
+ * A url with a long history made this the whole page: measured on
+ * onionfarms.com/threads/joshua-moon-megathread.475/page-1500, which has 47
+ * captures, /warcs/view came out 9,919px — 13.8 screens — of which 8,832px was
+ * this list and only 195px was the timeline above it. /warcs/search was worse in
+ * aggregate at 19.4 screens, with one group alone contributing 2,642px.
+ *
+ * The pane is the same idea as the offline tree's .scrollPane, and the reason is
+ * the same: the timeline is the summary and should stay put while the list under
+ * it moves, rather than both scrolling away together.
+ *
+ * `min()` of the two units because neither is right alone. 70vh matches the
+ * offline pane and keeps the list proportional to the window, but on a tall
+ * monitor 70vh is most of a metre of cards; 34rem is about three cards, which is
+ * the amount worth showing before scrolling is the better way to read. Whichever
+ * is smaller wins.
+ *
+ * Only bites when it has to: a group with one capture is 180px and never
+ * reaches the cap, which is most groups on a search page.
+ */
+.recordsList {
+  padding: 8px 12px;
+  background: var(--window-bg);
+
+  max-height: min(70vh, 34rem);
+  overflow-y: auto;
+
+  /* Matched to .timelineContainer's bar so the two scrollable things inside one
+     window do not look like they came from different applications. */
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent-orange) var(--secondary-bg);
+}
+
+.recordsList::-webkit-scrollbar {
+  width: 6px;
+}
+
+.recordsList::-webkit-scrollbar-track {
+  background: var(--secondary-bg);
+  border-radius: var(--r-sm);
+}
+
+.recordsList::-webkit-scrollbar-thumb {
+  background: var(--accent-orange);
+  border-radius: var(--r-sm);
+}
+
+.recordsList::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-orange-dark);
+}
+
+.recordsList > * + * {
+  margin-top: 8px;
+}
+
+/*
+ * Clears the fixed nav for the no-JS jump.
+ *
+ * On the WINDOW, because that is the element carrying the jump list's id —
+ * scroll-margin only means anything to the element actually being scrolled to,
+ * and it sat on .siteContainer (the wrapper) and on .timelineSection (the old
+ * target) for a moment each, where it did nothing at all.
+ *
+ * With JavaScript the list centres the window itself and this is unused. Without
+ * it the browser aligns the fragment target to the top of the viewport, and 80px
+ * is what the rest of the app uses to clear the bar — 60px plus its 2px border.
+ */
+.siteWindow {
+  scroll-margin-top: 80px;
+}

@@ -1,0 +1,83 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Build, test and deploy output.
+#
+# The four rules above only catch the package managers' own crash logs, which is
+# not what actually accumulates here: `npm run build > build.log` and
+# `bun test > test.log` are how this project is checked, and build.log, build2.log
+# and test.log were all sitting untracked in this directory when this rule was
+# written. Broad on purpose — nothing in this app's source is a .log.
+*.log
+
+# Tarballs. Deploying to the VPS packs changed files with tar before scp'ing
+# them, and a stray one left behind is 20 KB of duplicated source.
+*.tgz
+
+# env files
+#
+# Ignored because the values differ per environment and the file is not the same
+# on every machine: API_INTERNAL_URL is localhost when everything runs on one
+# box, and a private or tunnel address when the backend lives elsewhere.
+#
+# But the build genuinely DEPENDS on these, and silently: NEXT_PUBLIC_API_URL is
+# inlined into the client bundle at build time, so if it is missing the viewer
+# iframe on /warcs/view points every visitor at their own localhost:3000 and the
+# page looks broken for reasons nothing logs. A fresh clone has no way to learn
+# that from an ignored file, so .env.example is committed and re-included below.
+.env*
+!.env.example
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# Editor and OS droppings. Neither belongs to anyone but the machine that made it.
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ---------------------------------------------------------------------------
+# DELIBERATELY NOT IGNORED — each of these looks ignorable and is load-bearing.
+#
+#   bun.lock             The real lockfile (160 KB). Note there is also a
+#                        92-byte pnpm-lock.yaml stub in this directory that is
+#                        vestigial; two lockfiles for two package managers is a
+#                        trap, and the pnpm one should be deleted rather than
+#                        ignored.
+#
+#   lib/snapshots/*.json Seed data, not build output. lib/snapshot.ts imports
+#                        these statically so the homepage can render real
+#                        numbers during a backend outage instead of an empty
+#                        panel. A `snapshots/` or `*.json` rule would delete
+#                        that safety net without anything failing at build time.
+#
+#   AGENTS.md            Rewritten by `next dev` on every run. Committing it
+#                        with your work keeps the tree clean; ignoring it just
+#                        means the next person re-discovers the same warning.
+#
+#   proxy.ts             Next 16's renamed middleware, and the only thing
+#                        redirecting old /warcs/search?q= links into the path.
+#                        It is source, despite sitting at the root next to
+#                        config files.
+# ---------------------------------------------------------------------------

@@ -1,0 +1,375 @@
+.container {
+  min-height: 100vh;
+  padding-top: 80px;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-bottom: 40px;
+  background: linear-gradient(135deg, var(--primary-bg) 0%, var(--secondary-bg) 100%);
+}
+
+.mainContent {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.errorWindow {
+  width: 100%;
+}
+
+.errorContent {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+  margin-bottom: 32px;
+}
+
+.errorIcon {
+  flex-shrink: 0;
+}
+
+.iconContainer {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.mainIcon {
+  font-size: 64px;
+  animation: errorPulse 2s ease-in-out infinite;
+}
+
+.subIcon {
+  font-size: 24px;
+  font-weight: 900;
+  color: var(--accent-orange);
+  font-family: var(--font-mono);
+  letter-spacing: 2px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes errorPulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.8;
+  }
+}
+
+.errorDetails {
+  flex: 1;
+  min-width: 0;
+}
+
+.errorTitle {
+  font-size: 32px;
+  font-weight: 900;
+  color: var(--accent-orange);
+  margin-bottom: 12px;
+  font-family: var(--font-mono);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.errorMessage {
+  font-size: 16px;
+  color: var(--text-primary);
+  margin-bottom: 24px;
+  line-height: 1.6;
+  font-family: var(--font-mono);
+}
+
+.errorInfo {
+  background: var(--input-bg);
+  border: 2px solid var(--border-field);
+  border-radius: var(--r);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.infoItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.infoLabel {
+  color: var(--text-secondary);
+  font-weight: 600;
+  min-width: 100px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.infoValue {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.infoValue code {
+  background: var(--primary-bg);
+  padding: 2px 6px;
+  border-radius: var(--r-sm);
+  color: var(--accent-orange);
+  border: 1px solid var(--border-darker);
+}
+
+.suggestions {
+  margin-bottom: 32px;
+  padding: 20px;
+  background: var(--primary-bg-light);
+  border: 2px solid var(--border-soft);
+  border-radius: var(--r);
+}
+
+.suggestionsTitle {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--accent-orange);
+  margin-bottom: 16px;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.suggestionsList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.suggestionsList li {
+  font-size: 14px;
+  color: var(--text-secondary);
+  padding-left: 20px;
+  position: relative;
+  font-family: var(--font-mono);
+  line-height: 1.5;
+}
+
+.suggestionsList li::before {
+  content: "▸";
+  position: absolute;
+  left: 0;
+  color: var(--accent-orange);
+  font-weight: bold;
+}
+
+.suggestionsList li:hover {
+  color: var(--text-primary);
+}
+
+.actions {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-darker);
+}
+
+.terminalWindow {
+  width: 100%;
+}
+
+.terminal {
+  background: var(--primary-bg);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--r);
+  padding: 16px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--text-primary);
+  min-height: 200px;
+}
+
+.terminalLine {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.prompt {
+  color: var(--accent-orange);
+  font-weight: bold;
+  user-select: none;
+}
+
+.command {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.output {
+  color: var(--text-secondary);
+  font-style: italic;
+  padding-left: 16px;
+}
+
+.cursor {
+  color: var(--accent-orange);
+  font-weight: bold;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  51%,
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  .container {
+    padding-top: 76px;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .mainContent {
+    gap: 24px;
+  }
+
+  .errorContent {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 16px;
+  }
+
+  .mainIcon {
+    font-size: 48px;
+  }
+
+  .subIcon {
+    font-size: 20px;
+  }
+
+  .errorTitle {
+    font-size: 24px;
+  }
+
+  .errorMessage {
+    font-size: 14px;
+  }
+
+  .errorInfo {
+    padding: 12px;
+  }
+
+  .infoItem {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .infoLabel {
+    min-width: auto;
+    font-size: 11px;
+  }
+
+  .actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .terminal {
+    font-size: 11px;
+    padding: 12px;
+    min-height: 150px;
+  }
+
+  .terminalLine {
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .output {
+    padding-left: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .errorTitle {
+    font-size: 20px;
+  }
+
+  .errorMessage {
+    font-size: 13px;
+  }
+
+  .suggestions {
+    padding: 16px;
+  }
+
+  .suggestionsTitle {
+    font-size: 14px;
+  }
+
+  .suggestionsList li {
+    font-size: 12px;
+  }
+}
+
+/* The light-mode border overrides that used to live here are gone: the base
+   rules now use --border-field / --border-soft, which already resolve to the
+   light greys in light mode and to the orange borders in dark. */
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .mainIcon {
+    animation: none;
+  }
+
+  .cursor {
+    animation: none;
+    opacity: 1;
+  }
+}
+
+/* Accessibility improvements */
+.actions a:focus-visible {
+  outline: 2px solid var(--accent-orange);
+  outline-offset: 2px;
+}
+
+.suggestionsList li:focus-within {
+  color: var(--text-primary);
+}
+
+/* Print styles */
+@media print {
+  .terminalWindow {
+    display: none;
+  }
+
+  .mainIcon {
+    animation: none;
+  }
+
+  .cursor {
+    display: none;
+  }
+}

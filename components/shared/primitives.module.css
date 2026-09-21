@@ -1,0 +1,152 @@
+/*
+ * Shared style primitives.
+ *
+ * These recipes were, before this file existed, written out by hand in eleven
+ * different modules: the same `2px solid var(--border-dark)` + `4px` radius +
+ * `inset 0 1px 3px` field, the same card, the same floating panel. Seven of
+ * those eleven also carried their own copy of the light-mode grey border
+ * override, each stated twice (once for `prefers-color-scheme`, once for
+ * `[data-theme]`) — fourteen blocks saying the same thing. The `--border-field`
+ * token now resolves per theme, so none of them are needed here.
+ *
+ * ---------------------------------------------------------------------------
+ * A note on `composes` and ordering
+ *
+ * When one module composes a class from another, css-loader emits the composed
+ * file's rules as a dependency, i.e. BEFORE the composing file's. That makes an
+ * override in the composing file win — but the CSS Modules spec does not
+ * actually promise it, and it stops being true if a class composes from two
+ * files at once.
+ *
+ * So: variants that need to OVERRIDE a base property (a shorter field, a select
+ * that needs room for its arrow) live in this file, where source order is
+ * guaranteed. Cross-file `composes` is only ever used to ADD non-conflicting
+ * properties — layout, flex, width. Keep it that way.
+ * ------------------------------------------------------------------------ */
+
+/* ---- fields ------------------------------------------------------------- */
+
+.field {
+  background: var(--input-bg);
+  border: 2px solid var(--border-field);
+  border-radius: var(--r);
+  padding: 10px 12px;
+  min-height: 40px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  color: var(--text-primary);
+  outline: none;
+  box-shadow: var(--shadow-inset);
+  transition: all 0.2s ease;
+}
+
+.field:focus {
+  border-color: var(--accent-orange);
+  box-shadow: 0 0 0 3px var(--accent-tint), var(--shadow-inset);
+}
+
+.field:focus-visible {
+  outline: 2px solid var(--accent-orange);
+  outline-offset: 2px;
+}
+
+.field::placeholder {
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.field:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* A field on a toolbar rather than in a form — sits beside 22px chips. */
+.fieldCompact {
+  composes: field;
+  min-height: 0;
+  padding: 6px 10px;
+}
+
+/*
+ * A <select>. The extra right padding keeps the text off the native arrow, and
+ * the ellipsis is what stops "application/xhtml+xml" from stretching the bar.
+ */
+.select {
+  composes: field;
+  max-width: 180px;
+  padding-right: 34px;
+  cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.selectCompact {
+  composes: fieldCompact;
+  max-width: 180px;
+  padding-right: 30px;
+  cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/*
+ * The popup, stated explicitly.
+ *
+ * `color-scheme` in globals.css is the real fix — it is what makes the browser
+ * draw the popup itself in the right mode. This is the belt to that pair of
+ * braces: on Linux/Chrome in particular the popup is painted with colours that
+ * follow neither the page nor the color-scheme unless the options say so, which
+ * left "All content types" as near-invisible text on a near-identical ground.
+ *
+ * A descendant selector because <option> does not inherit from <select> the way
+ * an ordinary child would.
+ */
+.select option,
+.select optgroup,
+.selectCompact option,
+.selectCompact optgroup {
+  background: var(--input-bg);
+  color: var(--text-primary);
+}
+
+/* ---- surfaces ----------------------------------------------------------- */
+
+/* Static, sits in the flow. */
+.card {
+  background: var(--window-bg);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-sm);
+  box-shadow: var(--shadow-card);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+/* Floating over other content — dropdowns, popovers, notification cards. */
+.panel {
+  background: var(--bg-secondary);
+  border: 2px solid var(--nav-border);
+  border-radius: var(--r);
+  box-shadow: var(--shadow-float);
+}
+
+/* ---- mobile ------------------------------------------------------------- */
+
+@media (max-width: 768px) {
+  .field {
+    padding: 12px;
+    min-height: 44px;
+    font-size: 13px;
+  }
+
+  .fieldCompact {
+    padding: 8px 10px;
+    min-height: 0;
+  }
+
+  .select,
+  .selectCompact {
+    max-width: none;
+  }
+}

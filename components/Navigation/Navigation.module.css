@@ -1,0 +1,285 @@
+.navigation {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: var(--nav-bg);
+  backdrop-filter: blur(10px);
+  border-bottom: 2px solid var(--nav-border);
+  box-shadow: 0 2px 20px var(--accent-tint-weak);
+}
+
+.navContent {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 60px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--accent-orange);
+  text-decoration: none;
+  transition: color 0.2s ease;
+  font-family: var(--font-mono);
+  letter-spacing: 1px;
+}
+
+.logo:hover {
+  color: var(--accent-orange-light);
+}
+
+.logoIcon {
+  font-size: 20px;
+}
+
+.navLinks {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.navLink {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-weight: 500;
+  padding: 8px 16px;
+  border-radius: var(--r);
+  transition: all 0.2s ease;
+  position: relative;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.navLink:hover {
+  color: var(--accent-orange);
+  background: var(--accent-tint-weak);
+}
+
+.navLink.active {
+  color: var(--accent-orange);
+  background: var(--accent-tint);
+}
+
+.navLink.active::before {
+  content: "> ";
+  color: var(--accent-orange);
+}
+
+.mobileMenuButton {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--accent-orange);
+  font-size: 20px;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: var(--r);
+  transition: background 0.2s ease;
+  font-family: var(--font-mono);
+}
+
+.mobileMenuButton:hover {
+  background: var(--accent-tint-weak);
+}
+
+.mobileMenu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--nav-bg);
+  border-bottom: 2px solid var(--nav-border);
+  box-shadow: 0 4px 20px var(--accent-tint-weak);
+}
+
+.mobileMenu.open {
+  display: block;
+}
+
+.mobileMenuContent {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.mobileNavLink {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-weight: 500;
+  padding: 12px 16px;
+  border-radius: var(--r);
+  transition: all 0.2s ease;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.mobileNavLink:hover {
+  color: var(--accent-orange);
+  background: var(--accent-tint-weak);
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  .navContent {
+    padding: 0 16px;
+    height: 56px;
+  }
+
+  .logo {
+    font-size: 14px;
+  }
+
+  .logoIcon {
+    font-size: 18px;
+  }
+
+  .navLinks {
+    display: none;
+  }
+
+  .mobileMenuButton {
+    display: block;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+ * Dropdown groups
+ * ------------------------------------------------------------------------ */
+
+.navGroup {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/*
+ * The trigger has to look exactly like a .navLink, but it is a <button> because
+ * it opens a menu rather than going somewhere — so the browser's own button
+ * chrome is reset here rather than the element being downgraded to a <span>
+ * that no keyboard can reach.
+ */
+.navTrigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.caret {
+  font-size: 9px;
+  line-height: 1;
+  transition: transform 0.2s ease;
+}
+
+.navGroup:hover .caret,
+.navGroup:focus-within .caret {
+  transform: translateY(1px);
+}
+
+/*
+ * Anchored at the very bottom edge of the trigger, with the gap made of the
+ * panel's OWN padding rather than a margin. A margin would be dead space the
+ * pointer crosses on the way down, which closes the menu halfway to it.
+ */
+.dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  padding-top: 8px;
+  min-width: 190px;
+
+  /* Hidden by default, and hidden from the tab order with it — a menu that is
+   * not showing must not be focusable, or tabbing lands on invisible links. */
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-4px);
+  transition: opacity 0.15s ease, transform 0.15s ease, visibility 0.15s;
+}
+
+/*
+ * Three ways in: the pointer, a click (which sets .dropdownOpen), and the
+ * keyboard. :focus-within is what makes tabbing through the menu work — without
+ * it the panel closes the moment focus moves off the trigger and onto the first
+ * link inside it.
+ */
+.navGroup:hover .dropdown,
+.navGroup:focus-within .dropdown,
+.dropdown.dropdownOpen {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.dropdownPanel {
+  display: flex;
+  flex-direction: column;
+  padding: 6px;
+  border: 2px solid var(--nav-border);
+  border-radius: var(--r);
+  background: var(--bg-secondary);
+  box-shadow: var(--shadow-float);
+}
+
+.dropdownLink {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-weight: 500;
+  padding: 8px 14px;
+  border-radius: var(--r);
+  transition: all 0.2s ease;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.dropdownLink:hover {
+  color: var(--accent-orange);
+  background: var(--accent-tint-weak);
+}
+
+.dropdownLink.active {
+  color: var(--accent-orange);
+  background: var(--accent-tint);
+}
+
+.dropdownLink.active::before {
+  content: "> ";
+  color: var(--accent-orange);
+}
+
+/* ---- mobile: the group flattens, so there is nothing to hover ------------ */
+
+.mobileGroupLabel {
+  margin: 12px 0 4px;
+  color: var(--text-muted, var(--text-secondary));
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  text-align: center;
+  opacity: 0.7;
+}
+
+.mobileChildLink {
+  padding-left: 32px;
+}

@@ -1,0 +1,40 @@
+.searchForm {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.searchInputGroup {
+  display: flex;
+  gap: 0.85rem;
+  align-items: stretch;
+}
+
+/* Layout only — the field recipe is the shared primitive. */
+.searchInput {
+  composes: field from '../shared/primitives.module.css';
+  flex: 1;
+}
+
+.searchButton {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+/* Content-type filter dropdown, sits to the right of the input. The ellipsis
+   truncation for long type names ("application/xhtml+xml") and the right
+   padding that keeps text off the arrow are both in the primitive. */
+.contentTypeSelect {
+  composes: select from '../shared/primitives.module.css';
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .searchInputGroup {
+    flex-direction: column;
+  }
+
+  .searchButton {
+    align-self: stretch;
+  }
+}

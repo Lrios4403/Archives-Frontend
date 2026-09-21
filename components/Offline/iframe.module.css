@@ -1,0 +1,478 @@
+/*
+ * `relative` is what the notice badge and the progress overlay anchor to.
+ * Without it they would position against the nearest positioned ancestor, or
+ * failing that the viewport — which is where the badge used to sit, three
+ * quarters of a page away from the frame it was describing.
+ */
+.frame {
+  position: relative;
+  outline: none;
+
+  /*
+   * The gutter focusArchiveViewer scrolls to, when the frame is too tall to
+   * centre and has to be top-aligned instead. 80px is the figure the rest of the
+   * app uses to clear the fixed nav (60px plus a 2px border).
+   *
+   * Set at BOTH ends deliberately. Equal margins cancel out under `center`, so
+   * the centred case stays truly centred rather than sitting 40px low — which is
+   * what a top-only margin would do, since scrollIntoView aligns the margin box
+   * and not the element.
+   */
+  scroll-margin-top: 80px;
+  scroll-margin-bottom: 80px;
+}
+
+/* ---- the address bar, which is the window's titlebar ---------------------
+ * Everything from here to the trail panel sits on the titlebar's orange
+ * gradient rather than on a surface, so it takes the titlebar's own colours:
+ * text is var(--primary-bg) — off-white on burnt orange in light, dark brown on
+ * peach in dark — and the chrome is white-alpha, which is the convention
+ * Window's own _ □ × controls already use.
+ * ---------------------------------------------------------------------- */
+
+.addressRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.navPair {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 4px;
+}
+
+/*
+ * A chip on the accent ground. Not .chipButton, which is built for a surface —
+ * its --border-subtle edge and --text-secondary label both vanish against
+ * orange.
+ */
+.titleChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  padding: 2px 8px;
+  border: 1px solid var(--on-accent-line);
+  border-radius: var(--r);
+  background: var(--on-accent-fill);
+  color: var(--primary-bg);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  line-height: 1.6;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.titleChip:hover:not(:disabled) {
+  background: var(--on-accent-fill-hover);
+  border-color: var(--on-accent-line-hover);
+}
+
+.titleChip:focus-visible {
+  outline: none;
+  border-color: var(--on-accent-line-focus);
+  box-shadow: 0 0 0 3px var(--on-accent-ring);
+}
+
+.titleChip:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.navButton {
+  composes: titleChip;
+  padding: 2px 9px;
+}
+
+/*
+ * `relative` anchors the trail panel to this line rather than to the frame, so
+ * the panel opens under the address it belongs to whatever else is on the row.
+ */
+.addressWrap {
+  position: relative;
+  min-width: 0;
+  flex: 1;
+}
+
+/*
+ * The address button, laid out on the shared address grid so its url, id and
+ * type sit in the same columns as the history rows below it.
+ */
+.address {
+  composes: addressGrid from './Offline.module.css';
+  width: 100%;
+  padding: 3px 8px;
+  border: 1px solid transparent;
+  border-radius: var(--r-sm);
+  background: var(--on-accent-fill-quiet);
+  color: var(--primary-bg);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.address:hover:not(:disabled) {
+  background: var(--on-accent-fill-quiet-hover);
+  border-color: var(--on-accent-line);
+}
+
+.address:focus-visible {
+  outline: none;
+  border-color: var(--on-accent-line-focus);
+}
+
+.address:disabled {
+  cursor: default;
+}
+
+.addressUrl {
+  composes: truncate from './Offline.module.css';
+  font-family: var(--font-mono);
+  font-weight: 600;
+  color: var(--primary-bg);
+}
+
+/*
+ * The record id column. Also carries .addressId from Offline.module.css, which
+ * is what the mobile breakpoint hides — the id is a 36-character uuid and a
+ * 15.5rem fixed column for it is most of a phone.
+ */
+/*
+ * The two quieter columns. `opacity` on the inherited colour rather than a
+ * dimmer colour of their own: the titlebar text is near-white in light mode and
+ * near-black in dark, so anything hardcoded here would be right in one theme and
+ * invisible in the other.
+ */
+.addressRecord {
+  composes: truncate from './Offline.module.css';
+  composes: addressId from './Offline.module.css';
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: inherit;
+  opacity: 0.7;
+}
+
+.addressType {
+  white-space: nowrap;
+  color: inherit;
+  opacity: 0.7;
+}
+
+/* ---- history trail -------------------------------------------------------
+ * Absolutely positioned so opening it costs the document no height: the iframe
+ * is a fixed height and a panel in the flow would push it down, moving the page
+ * under the pointer at the moment the pointer is being used to point at it.
+ * ---------------------------------------------------------------------- */
+
+/*
+ * The gap between the address bar and the panel is the ANCHOR'S OWN PADDING,
+ * not a margin on the panel.
+ *
+ * With a margin those 4px belong to neither element: the pointer travelling from
+ * the address down to the first history row crosses them, `mouseleave` fires on
+ * .addressWrap, and the menu shuts halfway to the thing you were reaching for.
+ * Padding on a wrapper that is itself inside .addressWrap keeps the whole path
+ * hoverable. Navigation.module.css hit this first and says the same thing.
+ *
+ * The anchor is transparent and carries no chrome — .trailPanel below is the
+ * visible surface, so the padding reads as a gap rather than as 4px of panel.
+ */
+.trail {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  z-index: 20;
+  padding-top: 4px;
+}
+
+.trailPanel {
+  composes: panel from '../shared/primitives.module.css';
+  max-height: 16rem;
+  overflow: auto;
+}
+
+.trailRow {
+  composes: addressGrid from './Offline.module.css';
+  width: 100%;
+  /* Matches the address button's own padding, so the columns line up with the
+     header they drop out of rather than sitting a few pixels off it. */
+  padding: 5px 8px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.trailRow:hover {
+  background: var(--accent-tint-weak);
+}
+
+.trailRowCurrent {
+  background: var(--accent-tint);
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+/* A marker rather than only a background colour: which entry you are on is the
+   single thing this panel has to say, and saying it in colour alone says it to
+   fewer people. */
+.trailMarker {
+  color: var(--accent-orange);
+}
+
+.trailUrl {
+  composes: truncate from './Offline.module.css';
+  font-family: var(--font-mono);
+}
+
+.trailId {
+  composes: truncate from './Offline.module.css';
+  composes: addressId from './Offline.module.css';
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.trailRowCurrent .trailId,
+.trailRowCurrent .trailAt {
+  color: var(--accent-orange-dark);
+  opacity: 1;
+}
+
+.trailAt {
+  white-space: nowrap;
+  color: var(--text-muted);
+}
+
+/* ---- the document --------------------------------------------------------
+ * Sized like the online viewer's .viewer in app/warcs/view/page.module.css.
+ *
+ * The background stays a literal white and is deliberately NOT tokenised: an
+ * archived page that never set its own body background expects white under it,
+ * and painting brown there in dark mode would break pages rather than theme them.
+ * ---------------------------------------------------------------------- */
+
+.document {
+  display: block;
+  width: 100%;
+  height: 70vh;
+  min-height: 480px;
+  /* No border and no radius: the Window is flush in this state, so its own
+     border and its overflow:hidden corners are the frame. A second one inside
+     would be a rounded rectangle drawn 1px inside a rounded rectangle. */
+  border: 0;
+  background: #ffffff;
+}
+
+/* ---- states --------------------------------------------------------------- */
+
+.tutorial {
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r);
+  background: var(--primary-bg-lighter);
+  padding: 32px 16px;
+  text-align: center;
+}
+
+.tutorialTitle {
+  font-family: var(--font-mono);
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--accent-orange);
+}
+
+/*
+ * A paragraph now, not a one-liner. Centred text stops reading well past two
+ * lines, so the title stays centred and the body is a left-aligned column
+ * capped at a readable measure, centred as a block.
+ */
+.tutorialSub {
+  max-width: 72ch;
+  margin: 10px auto 0;
+  text-align: left;
+  font-size: 12.5px;
+  line-height: 1.65;
+  color: var(--text-secondary);
+}
+
+.tutorialSub strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+/*
+ * The four claims, as a row of chips. A list rather than a sentence because
+ * they are scanned, not read, and because each is an independent fact — a
+ * reader checking "does this upload my file" should find that answer without
+ * parsing prose.
+ */
+.tutorialClaims {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tutorialClaims li {
+  padding: 3px 9px;
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--r-pill);
+  background: var(--accent-tint-weak);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.3px;
+  color: var(--text-secondary);
+}
+
+.tutorialMore {
+  margin-top: 14px;
+}
+
+/* Reads as a link: the base reset makes anchors inherit everything. */
+.tutorialLink {
+  display: inline-block;
+  padding: 6px 12px;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-sm);
+  background: var(--primary-bg-light);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--accent-orange-dark);
+}
+
+.tutorialLink:hover,
+.tutorialLink:focus-visible {
+  background: var(--accent-tint-weak);
+  border-color: var(--accent-tint-border);
+  color: var(--accent-orange);
+}
+
+/* The one-line "Don't show again" undo. Quiet: it is there for the reader who
+   comes looking, not to nag the one who asked for silence. */
+.tutorialPrefs {
+  margin-top: 14px;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.tutorialReset {
+  cursor: pointer;
+  color: var(--accent-orange-dark);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.tutorialReset:hover,
+.tutorialReset:focus-visible {
+  color: var(--accent-orange);
+}
+
+.fatal {
+  composes: errorBox from './Offline.module.css';
+  padding: 24px 16px;
+}
+
+.fatalTitle {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.fatalUrl {
+  margin-top: 4px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  word-break: break-word;
+}
+
+.fatalDetail {
+  margin-top: 8px;
+  font-size: 11px;
+}
+
+.fatalDismiss {
+  composes: chipButton from './Offline.module.css';
+  margin-top: 12px;
+  border-color: var(--error-border);
+  color: var(--error-fg);
+}
+
+.fatalDismiss:hover:not(:disabled) {
+  border-color: var(--status-error);
+  background: var(--error-bg);
+  color: var(--error-fg);
+}
+
+/*
+ * The bottom column: non-fatal badge above, notice bars below.
+ *
+ * Anchored by `bottom`, so adding a bar or opening the badge's panel grows it
+ * UPWARD into the document rather than off the edge of the frame. A layout box,
+ * not a surface: clicks pass through the gaps to the page underneath, and the
+ * badge dock and each bar take the pointer themselves.
+ */
+.bottomStack {
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: 8px;
+  z-index: 20;
+
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+
+  pointer-events: none;
+}
+
+/*
+ * The shared bar stack positions itself absolutely for /warcs/view, where it
+ * is alone at the bottom of the frame. Inside this column it is a flex item.
+ * Two classes deep so it outranks the shared rule whatever order the two
+ * stylesheets load in.
+ */
+.bottomStack .stackedNotices {
+  position: static;
+  left: auto;
+  right: auto;
+  bottom: auto;
+}
+
+/*
+ * The destination of a redirect that has not been followed, rendered as the
+ * link it is. The shared `.url` gives it the ellipsis and the flex share; this
+ * gives it the colour and the underline that say "this goes somewhere".
+ */
+.urlLink {
+  text-align: left;
+  cursor: pointer;
+  color: var(--accent-orange-dark);
+  text-decoration: underline;
+  text-decoration-color: var(--accent-tint-border);
+  text-underline-offset: 2px;
+}
+
+.urlLink:hover,
+.urlLink:focus-visible {
+  color: var(--accent-orange);
+  text-decoration-color: currentColor;
+}

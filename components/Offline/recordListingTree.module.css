@@ -1,0 +1,215 @@
+/*
+ * The record tree.
+ *
+ * Every row used to be a solid `--accent-orange` bar with `--primary-bg` text:
+ * 3.27:1, which fails WCAG AA for body text, at 11px, uppercase, with 0.5px
+ * letter-spacing. Eighteen hundred of them at once had no hierarchy either — a
+ * directory looked exactly like a page, and the eye had nothing to latch onto.
+ *
+ * Now the row is the window surface and the text is `--text-primary` at 17.4:1.
+ * The orange is still the tree's colour, but it means something: a faint tint on
+ * hover, a stronger tint plus a left rule on the row whose captures are open.
+ * Selection is the only thing that fills, so it is the only thing that draws the
+ * eye.
+ */
+
+/* ---- rows ----------------------------------------------------------------- */
+
+/*
+ * The indent carrier. Height is fixed and MUST stay `--warc-row-height`: the
+ * windowed renderer sizes its spacer divs from that constant, so a row taller
+ * than the token scrolls out of step with the list.
+ *
+ * The depth guides are painted here as a background rather than as extra
+ * elements — one 1px line every `--warc-indent`, clipped to exactly the indent
+ * region. Real guide lines, no extra DOM per row, and nothing for the windowing
+ * to account for.
+ */
+.rowWrap {
+  position: relative;
+  height: var(--warc-row-height);
+  padding-left: calc(var(--depth, 0) * var(--warc-indent));
+  background-image: repeating-linear-gradient(
+    to right,
+    var(--tree-guide) 0 1px,
+    transparent 1px var(--warc-indent)
+  );
+  background-size: calc(var(--depth, 0) * var(--warc-indent)) 100%;
+  background-repeat: no-repeat;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: calc(var(--warc-row-height) - 6px);
+  padding: 0 10px;
+  overflow: hidden;
+  white-space: nowrap;
+  /*
+   * Reserved even when transparent. The open row gains a 2px rule and without
+   * the space already allocated every label would shift 2px sideways as the
+   * panel opened, which is far more distracting than the rule is useful.
+   */
+  border-left: 2px solid transparent;
+  border-radius: 0 var(--r-sm) var(--r-sm) 0;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  transition: background 0.12s ease;
+}
+
+.row:hover {
+  background: var(--accent-tint-weak);
+}
+
+/* The row whose capture panel is open. The one thing on screen that fills. */
+.rowOpen {
+  background: var(--accent-tint);
+  border-left-color: var(--accent-orange-dark);
+}
+
+.rowOpen:hover {
+  background: var(--accent-tint-strong);
+}
+
+/* ---- row contents --------------------------------------------------------- */
+
+/*
+ * The expand chevron. A fixed width so that labels line up down the column
+ * whether or not a row has one — a leaf gets `.toggleSpacer` instead, not
+ * nothing, or its name would sit 14px left of its siblings'.
+ */
+.toggle {
+  composes: bareButton from './Offline.module.css';
+  width: 14px;
+  text-align: center;
+  font-size: 10px;
+  line-height: 1;
+  color: var(--text-muted);
+  transition: color 0.12s ease;
+}
+
+.toggle:hover {
+  color: var(--accent-orange-dark);
+}
+
+.toggleSpacer {
+  width: 14px;
+  flex-shrink: 0;
+}
+
+/*
+ * The path segment. Sentence case as it appears in the url — it was uppercased,
+ * which at 11px mono costs a great deal of legibility and gains nothing: a url
+ * is not a heading, and lowercase letters have the ascenders and descenders that
+ * make a word recognisable at a glance.
+ */
+.name {
+  composes: truncate from './Offline.module.css';
+  font-family: var(--font-mono);
+}
+
+/* A directory carries weight; a leaf does not. The only hierarchy cue needed. */
+.nameBranch {
+  font-weight: 500;
+}
+
+.nameLeaf {
+  color: var(--text-secondary);
+}
+
+/* Everything after the name is pushed right and is secondary by definition. */
+.trailing {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  flex-shrink: 0;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/*
+ * The captures badge, which is also the panel's toggle.
+ *
+ * Was the literal text `[3 responses]`, underlined when open. A count and a dot
+ * say the same thing in a quarter of the width, which matters on a row that also
+ * has to show a url — and leaves room for the content type, which is what a
+ * reader actually scans for.
+ */
+.captures {
+  composes: bareButton from './Offline.module.css';
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 1px 7px;
+  border: 1px solid transparent;
+  border-radius: var(--r-pill);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-secondary);
+  transition: background 0.12s ease, border-color 0.12s ease;
+}
+
+.captures:hover:not(:disabled) {
+  border-color: var(--accent-tint-border);
+  background: var(--primary-bg-light);
+}
+
+.captures:disabled {
+  cursor: default;
+  color: var(--text-muted);
+}
+
+.capturesOpen {
+  border-color: var(--accent-orange-dark);
+  background: var(--primary-bg-light);
+  color: var(--text-primary);
+}
+
+/*
+ * Status dot. Colour carries the meaning and the title attribute carries it for
+ * anyone who cannot see colour — never colour alone.
+ */
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: var(--status-ok);
+}
+
+.dotWarn { background: var(--status-warn); }
+.dotError { background: var(--status-error); }
+.dotSpecial { background: var(--status-special); }
+.dotNone { background: var(--text-muted); }
+
+/* The essence content type, when there is room for it. */
+.type {
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+/* ---- toolbar -------------------------------------------------------------- */
+
+.toolbar {
+  composes: toolbar from './Offline.module.css';
+}
+
+/*
+ * What each control actually did, where a reader wonders. "Normalized" alone
+ * does not say WHICH normalisation, and a filtered tree with no count leaves
+ * "is that all of them?" unanswerable.
+ */
+.hint {
+  composes: metaDim from './Offline.module.css';
+  flex-shrink: 0;
+}
+
+.empty {
+  padding: 12px;
+  font-size: 12px;
+  color: var(--text-muted);
+}

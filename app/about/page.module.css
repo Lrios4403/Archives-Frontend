@@ -1,0 +1,38 @@
+/*
+ * Mirrors app/warcs/offline/page.module.css. The top padding IS the clearance
+ * for the fixed navigation; every full-width page on the site does it this way.
+ */
+.container {
+  min-height: 100vh;
+  padding: 120px 1rem 2rem;
+}
+
+.mainContent {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/*
+ * The end-of-page navigation. Centered, wrapping, and outside any window —
+ * three links do not need a titlebar and window controls around them.
+ *
+ * `justify-content: center` on the row and `wrap` so a narrow viewport stacks
+ * them rather than squeezing; the gap is the same 8px the chip rows inside the
+ * prose windows use, so this reads as the same vocabulary without the chrome.
+ */
+.nextSteps {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 76px 0.5rem 1rem;
+  }
+}

@@ -1,0 +1,133 @@
+.header {
+  text-align: center;
+  margin-bottom: 64px;
+  /* Stack children vertically and center them so the title, subtitle, divider
+     and the terminal-path pill each sit on their own line. Without this the pill
+     (inline-flex) sits beside the inline-block title. */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Retro terminal "path" pill above the title */
+.prompt {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--accent-orange);
+  background: var(--accent-tint-weak);
+  border: 1px solid var(--accent-tint-border);
+  padding: 5px 14px;
+  border-radius: var(--r-pill);
+  margin-top: 28px;
+}
+
+/*
+ * The path text inside the pill.
+ *
+ * PageHeader.tsx has always rendered `className={styles.promptPath}`, but the
+ * class was never declared — so it emitted `class="undefined"` and the text was
+ * held up entirely by whatever .prompt inherited to it. It looked close enough
+ * to right that nobody caught it; the tell was that the path could wrap out of
+ * its own pill on a narrow screen.
+ */
+.promptPath {
+  white-space: nowrap;
+}
+
+.promptCaret {
+  opacity: 0.75;
+}
+
+.title {
+  display: inline-block;
+  font-size: 46px;
+  font-weight: 900;
+  margin: 0;
+  background: linear-gradient(135deg, var(--accent-orange) 0%, var(--accent-orange-light) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-family: var(--font-mono);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  line-height: 1.1;
+  /* soft glow that works with the clipped gradient text */
+  filter: drop-shadow(0 3px 16px var(--accent-glow));
+}
+
+/* Blinking terminal cursor after the title. Needs its own fill color to be
+   visible, since the h1 clips its text fill to transparent for the gradient. */
+.cursor {
+  -webkit-text-fill-color: var(--accent-orange);
+  color: var(--accent-orange);
+  margin-left: 6px;
+  animation: blink 1.1s steps(1) infinite;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+.subtitle {
+  font-size: 14px;
+  color: var(--text-secondary);
+  font-weight: 400;
+  font-family: var(--font-mono);
+  letter-spacing: 1px;
+  font-style: italic;
+  margin: 20px 0 0;
+}
+
+/* Decorative gradient rule with a center diamond */
+.divider {
+  position: relative;
+  width: 170px;
+  height: 3px;
+  margin: 36px auto 0;
+  background: linear-gradient(90deg, transparent, var(--accent-orange), transparent);
+  border-radius: var(--r-sm);
+}
+
+.divider::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 7px;
+  height: 7px;
+  transform: translate(-50%, -50%) rotate(45deg);
+  background: var(--accent-orange);
+  box-shadow: 0 0 10px var(--accent-glow-strong);
+}
+
+@media (max-width: 768px) {
+  .title {
+    font-size: 32px;
+  }
+  .subtitle {
+    font-size: 12px;
+  }
+  .prompt {
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .title {
+    font-size: 25px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cursor {
+    animation: none;
+  }
+}

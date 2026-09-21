@@ -1,0 +1,84 @@
+/*
+ * Boxes for the offline viewer's loading skeleton.
+ *
+ * Only geometry lives here — the bars bring their own surface and pulse from
+ * Skeleton.module.css, and the window chrome is the real Window component. So
+ * this file exists to make the placeholders the same SIZE and the same DISTANCE
+ * APART as what replaces them, and nothing else.
+ *
+ * Every rule below names the file it is copied from. That duplication is
+ * deliberate: the alternative is the real components importing their spacing
+ * from a skeleton, and a skeleton that drifts is worse than none, because it
+ * moves the page at the exact moment the reader starts using it.
+ */
+
+/*
+ * The viewer's tutorial card, from `.tutorial` in Offline/iframe.module.css:
+ * 32px of vertical padding around a title and a subtitle, centred.
+ */
+.tutorial {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 32px 16px;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r);
+  background: var(--primary-bg-lighter);
+}
+
+/*
+ * The upload form, from `.form` in Offline/fileUpload.module.css. Its 16px gap
+ * is also `.stackWide` in Offline.module.css, which wraps it — one number in two
+ * places in the real page, and the same number here.
+ */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/*
+ * One labelled control, from `.field` in fileUpload.module.css.
+ *
+ * Flex specifically, and not because anything here needs flexbox: SkeletonBar
+ * ships `display: inline-block`, and two bars in a row would then sit SIDE BY
+ * SIDE whenever their widths fit on one line — a label beside its own input.
+ * Overriding that from here is a specificity coin toss between two single-class
+ * selectors in two CSS modules. A flex parent blockifies its items, so the
+ * stacking is a fact of the layout rather than a rule that has to win.
+ */
+.field {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* `.label` in fileUpload.module.css: 6px between a label and its control. */
+.label {
+  margin-bottom: 6px;
+}
+
+/* `.hint` in fileUpload.module.css: 4px under the control it describes. */
+.hint {
+  margin-top: 4px;
+}
+
+/*
+ * `.toolbar` in Offline.module.css. The row gap matters as much as the column
+ * gap: the real toolbar wraps, and at a narrow width these four controls wrap
+ * with it.
+ */
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin-bottom: 8px;
+}
+
+/* `.empty` in recordListingTree.module.css — the "no records yet" line. */
+.empty {
+  padding: 12px;
+}

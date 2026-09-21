@@ -1,0 +1,222 @@
+/* Loading styles */
+.resultsContainer {
+  margin-top: 2rem;
+}
+
+.loadingContainer {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-lg);
+  padding: 3rem 2rem;
+  text-align: center;
+}
+
+.loadingHeader {
+  margin-bottom: 2rem;
+}
+
+.loadingIcon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.loadingTitle {
+  font-size: 1.5rem;
+  color: var(--text-primary);
+  margin: 0 0 0.5rem 0;
+  font-family: var(--font-mono);
+}
+
+.loadingMessage {
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.loadingProgress {
+  margin-bottom: 2rem;
+}
+
+.progressBar {
+  width: 100%;
+  max-width: 400px;
+  height: 8px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r);
+  overflow: hidden;
+  margin: 0 auto 1rem auto;
+}
+
+.progressFill {
+  height: 100%;
+  background: var(--accent-orange);
+  border-radius: var(--r-sm);
+  animation: loading 2s infinite;
+}
+
+@keyframes loading {
+  0% {
+    width: 0%;
+  }
+  50% {
+    width: 70%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+.progressSteps {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.progressStep {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.stepIcon {
+  font-size: 1.2rem;
+}
+
+.stepText {
+  white-space: nowrap;
+}
+
+/* Skeleton loading */
+.resultsSkeleton {
+  max-width: 800px;
+  margin: 2rem auto 0;
+}
+
+.skeletonHeader {
+  margin-bottom: 2rem;
+}
+
+.skeletonText {
+  height: 1.2rem;
+  background: var(--bg-primary);
+  border-radius: var(--r);
+  animation: skeleton 1.5s infinite;
+}
+
+@keyframes skeleton {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.skeletonStats {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+  justify-content: center;
+}
+
+.skeletonStat {
+  width: 80px;
+  height: 1rem;
+  background: var(--bg-primary);
+  border-radius: var(--r);
+  animation: skeleton 1.5s infinite;
+}
+
+.skeletonSite {
+  margin-bottom: 2rem;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r);
+  padding: 1rem;
+  background: var(--bg-primary);
+}
+
+.skeletonSiteHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.skeletonActions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.skeletonButton {
+  width: 80px;
+  height: 2rem;
+  background: var(--bg-secondary);
+  border-radius: var(--r);
+  animation: skeleton 1.5s infinite;
+}
+
+.skeletonRecords {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.skeletonRecord {
+  padding: 1rem;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r);
+  background: var(--bg-secondary);
+}
+
+.skeletonRecordHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.skeletonBadge {
+  width: 40px;
+  height: 1.5rem;
+  background: var(--bg-primary);
+  border-radius: var(--r);
+  animation: skeleton 1.5s infinite;
+}
+
+.skeletonRecordDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .loadingContainer {
+    padding: 2rem 1rem;
+  }
+
+  .progressSteps {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .skeletonStats {
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+}

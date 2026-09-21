@@ -1,0 +1,52 @@
+/*
+ * pointer-events: none on the wrapper, and nothing inside turns it back on.
+ * This is purely informational and must not eat a click meant for the page
+ * underneath, which is still interactive while assets stream in.
+ */
+.overlay {
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  z-index: 30;
+  display: flex;
+  justify-content: center;
+  padding: 12px;
+  pointer-events: none;
+}
+
+.card {
+  composes: panel from '../shared/primitives.module.css';
+  width: 100%;
+  max-width: 28rem;
+  padding: 8px 12px;
+  backdrop-filter: blur(10px);
+}
+
+.head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.stage {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  color: var(--text-primary);
+}
+
+.count {
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.url {
+  margin-top: 2px;
+}
+
+.bar {
+  margin-top: 6px;
+}

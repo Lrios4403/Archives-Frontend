@@ -1,0 +1,196 @@
+/*
+ * Capped and scrollable.
+ *
+ * A .wacz is expanded into one handle per archive at selection time, so picking a
+ * single container produces four rows — and with a handful of containers the list
+ * pushed the Records window below the fold before anything had been parsed.
+ *
+ * min() rather than a flat rem value, for the reason .scrollPaneWithPanel gives:
+ * on a short viewport a fixed cap is most of the screen. ~4 rows at rest.
+ */
+.list {
+  composes: card from '../shared/primitives.module.css';
+  list-style: none;
+  max-height: min(19rem, 45vh);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+/*
+ * `li + li` rather than a border on every row plus `:first-child { border: 0 }`.
+ * Tailwind's divide-y compiles to exactly this, and stating it directly is one
+ * rule instead of two.
+ */
+.item + .item {
+  border-top: 1px solid var(--border-hairline);
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px 12px;
+  transition: background 0.12s ease;
+}
+
+.item:hover {
+  background: var(--accent-tint-weak);
+}
+
+/* ---- the name line -------------------------------------------------------- */
+
+.head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  min-width: 0;
+}
+
+/*
+ * Truncates on the LEFT, which is the whole point.
+ *
+ * An expanded container's name is "oacu-oir-nih.wacz › rec-7c53beba8825-…-0.warc.gz"
+ * and the half that distinguishes one row from the next is the tail. Ellipsizing
+ * the end gives four rows that all read "oacu-oir-nih.wacz › rec-7c53beba…" and
+ * say nothing.
+ *
+ * `direction: rtl` with `text-align: left` is the trick that does it: the overflow
+ * point moves to the start of the string while the glyphs stay in logical order.
+ * `unicode-bidi: plaintext` keeps the text itself from being reordered — without
+ * it a name ending in punctuation renders with that punctuation moved to the front.
+ */
+.name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  direction: rtl;
+  text-align: left;
+  unicode-bidi: plaintext;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-primary);
+}
+
+.size {
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* ---- the status line ------------------------------------------------------ */
+
+.statusRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  font-size: 11px;
+}
+
+.state {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+}
+
+/*
+ * The state dot. Colour and the label always travel together — the label is never
+ * dropped in favour of the dot, so colour is never the only carrier.
+ */
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.dotPending { background: var(--text-muted); }
+.dotParsing { background: var(--accent-orange); }
+.dotParsed { background: var(--status-ok); }
+.dotError { background: var(--status-error); }
+
+.summary {
+  flex: 1;
+  min-width: 0;
+  color: var(--text-secondary);
+}
+
+/* Tabular figures so a counting percentage does not jitter the row's width. */
+.percent {
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  color: var(--text-secondary);
+}
+
+.bar {
+  margin-top: 2px;
+}
+
+/*
+ * The four parse states. These used to be a `statusClasses` lookup of Tailwind
+ * strings, which existed because Tailwind's scanner cannot see a class name
+ * assembled at runtime. Under CSS Modules `s[status]` is an ordinary property
+ * read, so the indirection is gone and these are just classes.
+ */
+.pending {
+  color: var(--text-muted);
+}
+
+.parsing {
+  color: var(--accent-orange);
+}
+
+.parsed {
+  color: var(--ok-fg);
+}
+
+.error {
+  color: var(--error-fg);
+}
+
+/* The progress fill takes its colour from the same four states. */
+.fillPending,
+.fillParsing {
+  composes: progressFill from './Offline.module.css';
+}
+
+.fillParsed {
+  composes: progressFillDone from './Offline.module.css';
+}
+
+.fillError {
+  composes: progressFillFailed from './Offline.module.css';
+}
+
+.failure {
+  composes: errorBox from './Offline.module.css';
+}
+
+.failureStage {
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.failureMessage {
+  margin-top: 2px;
+  font-size: 11px;
+  word-break: break-word;
+}
+
+.failureReached {
+  margin-top: 2px;
+  font-size: 11px;
+  opacity: 0.85;
+}
+
+.empty {
+  font-size: 12px;
+  color: var(--text-muted);
+}

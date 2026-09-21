@@ -1,0 +1,133 @@
+.container {
+  min-height: 100vh;
+  padding-top: 120px; /* Space for fixed navigation */
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-bottom: 40px;
+}
+
+.mainContent {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.title {
+  font-size: 42px;
+  font-weight: 900;
+  margin-bottom: 12px;
+  background: linear-gradient(135deg, var(--accent-orange) 0%, var(--accent-orange-light) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-family: var(--font-mono);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: var(--text-secondary);
+  font-weight: 400;
+  font-family: var(--font-mono);
+  letter-spacing: 1px;
+  font-style: italic;
+}
+
+.statusBar {
+  margin-top: 64px;
+  border: 2px solid var(--border-dark);
+  background: var(--primary-bg-light);
+  border-radius: var(--r);
+  padding: 16px 20px;
+}
+
+.statusContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  flex-wrap: wrap;
+  gap: 16px;
+  font-family: var(--font-mono);
+}
+
+.statusLeft {
+  color: var(--text-secondary);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.statusLeft::before {
+  content: "$ ";
+  color: var(--accent-orange);
+}
+
+.statusRight {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  color: var(--text-secondary);
+}
+
+.statusStat {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+.desktopIconsContainer {
+  display: none;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  .container {
+    padding-top: 76px;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .title {
+    font-size: 32px;
+  }
+
+  .subtitle {
+    font-size: 12px;
+  }
+
+  .statusContent {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .statusRight {
+    gap: 16px;
+    font-size: 11px;
+  }
+
+  .desktopIconsContainer {
+    display: block;
+    margin: 32px 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .title {
+    font-size: 24px;
+  }
+
+  .statusRight {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+}
