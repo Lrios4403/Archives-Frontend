@@ -56,6 +56,13 @@
   display: flex;
   flex-direction: column;
   gap: 64px;
+  contain: layout style;
+
+  /* Keep below-the-fold site cards out of layout, paint, and accessibility work
+     until they approach the viewport. Each card remains in the DOM, so anchors,
+     no-JS navigation, keyboard access, and screen readers keep their semantics. */
+  content-visibility: auto;
+  contain-intrinsic-size: auto 560px;
 }
 
 /* No Results Styles */

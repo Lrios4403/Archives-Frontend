@@ -1,6 +1,7 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { memo, useEffect, useRef, useState } from "react"
+import Link from "next/link"
 import type { WarcRecord } from "@/lib/db"
 import { copyText, downloadHref, downloadName, viewHref, viewUrlForClipboard } from "./actions"
 import styles from "./WarcRecordItem.module.css"
@@ -20,15 +21,18 @@ function formatBytes(bytes: number): string {
   return value < 10 ? value.toFixed(1) + sizes[i] : Math.round(value) + sizes[i]
 }
 
-// Helper function to format date compactly
+// Reuse one formatter across rows; constructing an Intl formatter per record is
+// surprisingly expensive on large result pages.
+const dateFormatter = new Intl.DateTimeFormat("en-US", {
+  month: "short",
+  day: "numeric",
+  year: "2-digit",
+  hour: "numeric",
+  minute: "2-digit",
+})
+
 function formatDate(dateString: string): string {
-  return new Date(dateString).toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "2-digit",
-    hour: "numeric",
-    minute: "2-digit",
-  })
+  return dateFormatter.format(new Date(dateString))
 }
 
 // Helper function to get record type from WARC ID
@@ -66,7 +70,7 @@ const COPY_LABEL: Record<CopyState, { icon: string; text: string }> = {
   failed: { icon: "⚠️", text: "Failed" },
 }
 
-export default function WarcSearchResultsListItem({ record, isHighlighted = false }: WarcRecordItemProps) {
+function WarcSearchResultsListItem({ record, isHighlighted = false }: WarcRecordItemProps) {
   const { icon, type } = getRecordType(record.warcRecordId)
   const statusColorClass = getStatusColorClass(record.status)
 
@@ -187,14 +191,42 @@ export default function WarcSearchResultsListItem({ record, isHighlighted = fals
         </div>
 
         <footer className={styles.recordFooter}>
-          <a
+          {/*
+            * prefetch={false}, and it has to be.
+            *
+            * Bare `prefetch` means prefetch={true}, which under cacheComponents
+            * resolves to Next's "Full" strategy — and that strategy sends NO
+            * Next-Router-Prefetch header, only RSC: 1. The server cannot tell it
+            * from a real navigation, so it renders the page DYNAMICALLY. Next's
+            * own source comment says as much: "we issue roughly the same request
+            * that we would during a real navigation."
+            *
+            * /warcs/view is the wrong route to do that to. It awaits
+            * getRecordSiteHistoryReal, which is the one hot read in lib/db.tsx
+            * with no "use cache" on it, so every prefetch is an uncached trip to
+            * the backend and a live Postgres query — and a redirect capture
+            * costs two. One per visible row, on page load, before anyone has
+            * clicked anything.
+            *
+            * The default (no prop) would be "auto", which is also not free here:
+            * `instant = false` means this route has no static shell to fetch.
+            * So the prefetch is turned off rather than softened.
+            *
+            * If instant View clicks are wanted later, the fix is to cache the
+            * query — "use cache" + cacheTag("archives") on
+            * getRecordSiteHistoryReal, matching the six reads in that file that
+            * already do it, with /api/revalidate already flushing that tag.
+            * Then prefetching becomes cheap enough to reconsider.
+            */}
+          <Link
             href={viewHref(record.recordId)}
+            prefetch={false}
             className={styles.actionButton}
             aria-label={`View WARC record ${record.recordId}`}
           >
             <span aria-hidden="true">🔍</span>
             View
-          </a>
+          </Link>
           {/*
             * A real link now, rather than the `href="#"` placeholder it was.
             *
@@ -237,3 +269,10 @@ export default function WarcSearchResultsListItem({ record, isHighlighted = fals
     </>
   )
 }
+
+export default memo(
+  WarcSearchResultsListItem,
+  (previous, next) =>
+    previous.isHighlighted === next.isHighlighted &&
+    previous.record === next.record,
+)

@@ -1,0 +1,10 @@
+{
+  "name": "M4cgyvers Archives",
+  "short_name": "Archives",
+  "description": "Search and browse archived websites preserved as WARC files.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f5f5f5",
+  "theme_color": "#c0c0c0",
+  "icons": [{ "src": "/icon", "sizes": "any", "type": "image/png", "purpose": "any maskable" }]
+}

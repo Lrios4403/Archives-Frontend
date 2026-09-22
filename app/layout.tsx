@@ -5,6 +5,9 @@ import "./globals.css"
 import Navigation from "@/components/Navigation/Navigation"
 import { jsonLd, organizationSchema, websiteSchema } from "@/lib/schema"
 import ArchiveTools from "@/components/WebMCP/ArchiveTools"
+import ConnectionStatus from "@/components/Offline/ConnectionStatus"
+import ServiceWorkerRegistration from "@/components/Offline/ServiceWorkerRegistration"
+import PerformanceMonitor from "@/components/Performance/PerformanceMonitor"
 import {
   SITE_LOCALE,
   SITE_NAME,
@@ -75,6 +78,8 @@ export const metadata: Metadata = {
     title: `${SITE_NAME} — ${SITE_TAGLINE}`,
     description: SITE_TAGLINE,
   },
+  manifest: "/manifest.webmanifest",
+  appleWebApp: { capable: true, title: SITE_NAME, statusBarStyle: "default" },
   twitter: {
     card: "summary_large_image",
     creator: TWITTER_HANDLE,
@@ -135,7 +140,10 @@ export default function RootLayout({
           * the tools silently stop existing, with nothing in the console.
           */}
         <ArchiveTools />
-      <Navigation />
+        <ServiceWorkerRegistration />
+        <PerformanceMonitor />
+        <ConnectionStatus />
+        <Navigation />
         {children}
       </body>
     </html>

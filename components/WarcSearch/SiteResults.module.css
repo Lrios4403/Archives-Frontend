@@ -1,5 +1,12 @@
 .siteContainer {
   margin-bottom: 0;
+
+  /* Keep each archive window's layout and paint work local while large result
+     pages scroll. The intrinsic size prevents below-the-fold cards from
+     collapsing before content-visibility reveals them. */
+  contain: layout paint style;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 560px;
 }
 
 .siteContent {
@@ -164,6 +171,14 @@
 
 .recordsList > * + * {
   margin-top: 8px;
+}
+
+/* Keep large capture histories out of layout, paint, and accessibility work
+   until they approach the viewport. This complements the bounded scroll pane
+   without changing keyboard navigation or requiring a fragile row-height model. */
+.recordsList > * {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 220px;
 }
 
 /*
