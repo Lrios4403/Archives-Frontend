@@ -58,7 +58,22 @@ export default function ConnectionStatus() {
     >
       <span className={styles.dot} aria-hidden="true" />
       <span>
-        {online ? "Back online — syncing saved changes" : "Offline — changes will sync when you reconnect"}
+        {/*
+          * Says what this app can actually do offline, which is not "sync".
+          *
+          * The previous copy promised "changes will sync when you reconnect".
+          * There are no changes: the archive is read-only — no POST, PUT or
+          * DELETE anywhere in the frontend, every backend route a GET, and the
+          * one server action only calls redirect(). Telling a reader their work
+          * is queued when nothing is queued is worse than saying nothing.
+          *
+          * What IS true offline: pages already visited come from the service
+          * worker's cache, and /warcs/offline keeps working entirely, because it
+          * parses local files in the browser and never needed the network.
+          */}
+        {online
+          ? "Back online"
+          : "Offline — cached pages still work, and the WARC viewer runs without a connection"}
       </span>
     </div>
   )
