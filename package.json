@@ -2,6 +2,7 @@
   "name": "m4cgyvers-archives",
   "version": "0.1.0",
   "private": true,
+  "license": "WTFPL",
   "scripts": {
     "build": "next build",
     "dev": "next dev -p 3001",
